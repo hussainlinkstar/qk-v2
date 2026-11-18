@@ -12,8 +12,8 @@ import {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState(MOCK_LOGIN.email);
-  const [password, setPassword] = useState(MOCK_LOGIN.password);
+  const [email, setEmail] = useState<string>(MOCK_LOGIN.email);
+  const [password, setPassword] = useState<string>(MOCK_LOGIN.password);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
