@@ -1,4 +1,4 @@
-# JM WhatsApp Sales Preview
+# JM WhatsApp Sales Preview (qk-v2)
 
 Standalone Next.js preview of the Joseph Mews WhatsApp Sales cockpit (FE mocks only).
 
@@ -13,7 +13,6 @@ Open http://localhost:3010
 
 ## Vercel
 
-- Root Directory: this folder (`jm-whatsapp-preview`)
+- Root Directory: repo root
 - Framework: Next.js
 - Build: `npm run build`
-- Output: Next default
