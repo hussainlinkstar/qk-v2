@@ -4,16 +4,12 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 import { Input } from "@/components/cockpit/controls";
-import {
-  MOCK_LOGIN,
-  setMockAuthenticated,
-  validateMockLogin,
-} from "@/lib/mock-auth";
+import { setMockAuthenticated, validateMockLogin } from "@/lib/mock-auth";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState<string>(MOCK_LOGIN.email);
-  const [password, setPassword] = useState<string>(MOCK_LOGIN.password);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -84,20 +80,6 @@ export default function LoginPage() {
           >
             Sign in
           </button>
-
-          <div className="mt-4 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-2.5 text-[12px] text-slate-400">
-            <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-              Demo credentials
-            </p>
-            <p>
-              <span className="text-slate-500">Email</span>{" "}
-              <span className="font-mono text-slate-200">{MOCK_LOGIN.email}</span>
-            </p>
-            <p>
-              <span className="text-slate-500">Password</span>{" "}
-              <span className="font-mono text-slate-200">{MOCK_LOGIN.password}</span>
-            </p>
-          </div>
         </form>
       </div>
     </div>
