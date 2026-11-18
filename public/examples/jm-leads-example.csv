@@ -1,0 +1,7 @@
+first_name,last_name,mobile,email,country,lead_source,webinar_title,webinar_date,webinar_url,assigned_sales_rep,investment_budget,previous_uk_investment,investment_timeframe,investment_market,location_interest,funding_method
+Sarah,Jones,+447700900123,sarah.jones@example.com,United Kingdom,Webinar registration,How to Invest in UK Property,2026-09-18,https://example.com/webinars/uk-property,Johnny Conran,250000,No,4 months,UK,Birmingham,Mortgage
+Ahmed,Hassan,+971501234567,ahmed.hassan@example.com,United Arab Emirates,External ad,,,Johnny Conran,400000,Yes,12 months,UAE,Dubai,Cash
+Priya,Patel,+447711223344,priya.patel@example.com,United Kingdom,Organic inbound,Birmingham Investment Opportunities,2026-10-02,https://example.com/webinars/birmingham,Johnny Conran,180000,No,2 months,UK,Leeds,Mortgage
+James,Okafor,+447700111222,james.okafor@example.com,United Kingdom,Spreadsheet upload,,,Johnny Conran,,,,,,
+Elena,Rossi,+447700333444,elena.rossi@example.com,Italy,Webinar registration,How to Invest in UK Property,2026-09-18,https://example.com/webinars/uk-property,Johnny Conran,220000,No,6 months,UK,Derby,Mortgage
+Fatima,Al-Sayed,+447700777888,fatima.alsayed@example.com,United Kingdom,Webinar registration,How to Invest in UK Property,2026-09-18,https://example.com/webinars/uk-property,Johnny Conran,320000,Yes,3 months,UK,Birmingham,Cash
