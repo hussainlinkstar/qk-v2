@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  CalendarDays, LayoutGrid, MessageSquare, Upload, Users,
+  CalendarDays, LayoutGrid, LogOut, MessageSquare, Upload, Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { setMockAuthenticated } from "@/lib/mock-auth";
 import { WhatsappSalesChatPanel } from "@/components/whatsapp-sales/chat-panel";
 
 export type WhatsappSalesSection = "overview" | "leads" | "webinars" | "data";
@@ -69,19 +70,33 @@ export function WhatsappSalesCockpitShell({
           </div>
         </div>
 
-        <div className="flex items-center gap-1 rounded-full bg-white/[0.06] p-0.5">
-          <TabButton
-            active={!chatOpen}
-            onClick={closeChat}
-            icon={LayoutGrid}
-            label="Cockpit"
-          />
-          <TabButton
-            active={chatOpen}
-            onClick={openChat}
-            icon={MessageSquare}
-            label="Chat"
-          />
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 rounded-full bg-white/[0.06] p-0.5">
+            <TabButton
+              active={!chatOpen}
+              onClick={closeChat}
+              icon={LayoutGrid}
+              label="Cockpit"
+            />
+            <TabButton
+              active={chatOpen}
+              onClick={openChat}
+              icon={MessageSquare}
+              label="Chat"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setMockAuthenticated(false);
+              router.replace("/login");
+            }}
+            className="flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs text-slate-400 transition-colors hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/50"
+            title="Sign out"
+          >
+            <LogOut className="size-3.5" />
+            <span className="hidden sm:inline">Sign out</span>
+          </button>
         </div>
       </header>
 
