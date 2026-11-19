@@ -1,5 +1,6 @@
 # JM WhatsApp Sales Preview (qk-v2)
 
+
 Standalone Next.js preview of the Joseph Mews WhatsApp Sales cockpit (FE mocks only).
 
 ## Local
