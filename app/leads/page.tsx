@@ -6,6 +6,7 @@ import {
   AlertTriangle, ChevronDown, Search, SlidersHorizontal, Sparkles, Users, X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { OutcomesStrip } from "@/components/cockpit/outcomes-strip";
 import { WhatsappSalesCockpitShell } from "@/components/whatsapp-sales/cockpit-shell";
 import { FilterSelect } from "@/components/whatsapp-sales/filter-select";
 import { MOCK_LEADS } from "@/components/whatsapp-sales/mocks";
@@ -14,7 +15,7 @@ import {
   formatDisplayDate, interestBadgeClass, statusBadgeClass,
 } from "@/components/whatsapp-sales/utils";
 
-const CARD = "rounded-2xl border border-white/[0.07] bg-[#0c1018]";
+const CARD = "card-surface";
 
 const ALL_STATUSES = [
   "New", "Not Contacted", "Contacted", "Active Conversation", "Qualified",
@@ -108,79 +109,60 @@ export default function WhatsappSalesLeadsPage() {
 
   return (
     <WhatsappSalesCockpitShell agentId={agentId} workerName={workerName} active="leads">
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-5">
+      <div className="flex w-full flex-col gap-5">
         {/* Header + compact stats (no empty metric boxes) */}
         <header className="flex flex-col gap-4">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-[28px] font-bold tracking-[-0.03em] text-white">Leads</h1>
-              <p className="mt-1 max-w-[56ch] text-[14px] text-slate-400">
+              <h1 className="text-[28px] font-bold tracking-[-0.03em] text-ink">Leads</h1>
+              <p className="mt-1 max-w-[56ch] text-[14px] text-muted">
                 Search and filter the pool, then open a profile for qualification and handoff context.
               </p>
             </div>
-            <p className="text-[12.5px] text-slate-500">{workerName}</p>
+            <p className="text-[12.5px] text-subtle">{workerName}</p>
           </div>
 
-          <div className={cn(CARD, "flex flex-wrap items-stretch divide-x divide-white/[0.06]")}>
-            <div className="flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3">
-              <span className="grid size-8 place-items-center rounded-lg bg-white/[0.05] text-slate-400">
-                <Users className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-white">
-                  {MOCK_LEADS.length}
-                </p>
-                <p className="mt-1 text-[11px] text-slate-500">In pool</p>
-              </div>
-            </div>
-            <div className="flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3">
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-white">
-                  {filtered.length}
-                  <span className="ml-1.5 text-[11px] font-medium text-slate-500">
-                    {activeChips.length ? "filtered" : "all"}
-                  </span>
-                </p>
-                <p className="mt-1 text-[11px] text-slate-500">Showing</p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => set("intent", filters.intent === "High" ? "all" : "High")}
-              className={cn(
-                "flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3 text-left transition-colors hover:bg-white/[0.03]",
-                filters.intent === "High" && "bg-emerald-500/10",
-              )}
-            >
-              <span className="grid size-8 place-items-center rounded-lg bg-emerald-500/15 text-emerald-300">
-                <Sparkles className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-emerald-300">
-                  {highInterest}
-                </p>
-                <p className="mt-1 text-[11px] text-slate-500">High interest</p>
-              </div>
-            </button>
-            <button
-              type="button"
-              onClick={() => set("status", filters.status === "Human Handoff" ? "all" : "Human Handoff")}
-              className={cn(
-                "flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3 text-left transition-colors hover:bg-white/[0.03]",
-                filters.status === "Human Handoff" && "bg-red-500/10",
-              )}
-            >
-              <span className="grid size-8 place-items-center rounded-lg bg-red-500/15 text-red-300">
-                <AlertTriangle className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-red-300">
-                  {needHuman}
-                </p>
-                <p className="mt-1 text-[11px] text-slate-500">Need human</p>
-              </div>
-            </button>
-          </div>
+          <OutcomesStrip
+            variant="compact"
+            title="Lead pool"
+            tiles={[
+              {
+                value: String(MOCK_LEADS.length),
+                label: "In pool",
+                tone: "brand",
+                icon: Users,
+                caption: "All leads",
+                spark: [40, 48, 55, 62, 70],
+              },
+              {
+                value: String(filtered.length),
+                label: "Showing",
+                tone: "neutral",
+                caption: activeChips.length ? "Filtered view" : "No filters",
+                spark: [50, 52, 48, 55, 58],
+              },
+              {
+                value: String(highInterest),
+                label: "High interest",
+                tone: "success",
+                trend: "up",
+                icon: Sparkles,
+                caption: "Click to filter",
+                spark: [20, 28, 35, 42, 50],
+                onClick: () => set("intent", filters.intent === "High" ? "all" : "High"),
+              },
+              {
+                value: String(needHuman),
+                label: "Need human",
+                tone: "danger",
+                trend: "down",
+                icon: AlertTriangle,
+                caption: "Handoffs",
+                spark: [30, 28, 25, 22, 18],
+                onClick: () => set("status", filters.status === "Human Handoff" ? "all" : "Human Handoff"),
+              },
+            ]}
+          />
 
           <div className="flex flex-wrap gap-1.5">
             {[
@@ -198,10 +180,10 @@ export default function WhatsappSalesLeadsPage() {
                   type="button"
                   onClick={() => set("status", pill.value)}
                   className={cn(
-                    "rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/50",
+                    "rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40",
                     on
-                      ? "bg-indigo-500 text-white"
-                      : "border border-white/[0.08] bg-white/[0.03] text-slate-400 hover:bg-white/[0.06] hover:text-white",
+                      ? "bg-brand text-white"
+                      : "border border-line bg-well text-muted hover:bg-well hover:text-ink",
                   )}
                 >
                   {pill.label}
@@ -218,14 +200,14 @@ export default function WhatsappSalesLeadsPage() {
         <section className={cn(CARD, "p-4 sm:p-5")}>
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
             <label className="relative min-w-0 flex-1">
-              <span className="mb-1.5 block text-[11px] text-slate-500">Search</span>
+              <span className="mb-1.5 block text-[11px] text-subtle">Search</span>
               <span className="relative block">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-subtle" />
                 <input
                   value={filters.q}
                   onChange={(e) => set("q", e.target.value)}
                   placeholder="Name, phone, email, source…"
-                  className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] pl-10 pr-3 text-sm text-slate-200 placeholder:text-slate-500 outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/30"
+                  className="h-10 w-full rounded-xl border border-line bg-well pl-10 pr-3 text-sm text-ink-2 placeholder:text-subtle outline-none focus:border-brand/50 focus:ring-2 focus:ring-brand/30"
                 />
               </span>
             </label>
@@ -241,8 +223,8 @@ export default function WhatsappSalesLeadsPage() {
               className={cn(
                 "inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border px-3 text-[12px] font-semibold transition-colors",
                 moreOpen
-                  ? "border-indigo-500/40 bg-indigo-500/15 text-indigo-200"
-                  : "border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.06]",
+                  ? "border-brand/40 bg-brand-soft text-brand-ink"
+                  : "border-line bg-well text-ink-3 hover:bg-well",
               )}
             >
               <SlidersHorizontal className="size-3.5" />
@@ -252,7 +234,7 @@ export default function WhatsappSalesLeadsPage() {
           </div>
 
           {moreOpen && (
-            <div className="mt-3 grid grid-cols-2 gap-2 border-t border-white/[0.06] pt-3 md:grid-cols-3 xl:grid-cols-5">
+            <div className="mt-3 grid grid-cols-2 gap-2 border-t border-line pt-3 md:grid-cols-3 xl:grid-cols-5">
               <FilterSelect value={filters.location} onChange={(v) => set("location", v)} label="Location" options={["all", ...locations]} />
               <FilterSelect value={filters.experience} onChange={(v) => set("experience", v)} label="Experience" options={["all", ...experiences]} />
               <FilterSelect value={filters.readiness} onChange={(v) => set("readiness", v)} label="Readiness" options={["all", "Immediate", "Near Term", "Future", "Unknown"]} />
@@ -263,13 +245,13 @@ export default function WhatsappSalesLeadsPage() {
           )}
 
           {activeChips.length > 0 && (
-            <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-white/[0.06] pt-3">
+            <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-line pt-3">
               {activeChips.map((chip) => (
                 <button
                   key={chip.key}
                   type="button"
                   onClick={() => clearChip(chip.key)}
-                  className="inline-flex items-center gap-1 rounded-full border border-indigo-500/25 bg-indigo-500/10 px-2.5 py-1 text-[11px] font-medium text-indigo-200 hover:bg-indigo-500/20"
+                  className="inline-flex items-center gap-1 rounded-full border border-brand/25 bg-brand-soft px-2.5 py-1 text-[11px] font-medium text-brand-ink hover:bg-brand-soft"
                 >
                   {chip.label}
                   <X className="size-3 opacity-70" />
@@ -278,7 +260,7 @@ export default function WhatsappSalesLeadsPage() {
               <button
                 type="button"
                 onClick={() => setFilters(EMPTY)}
-                className="ml-1 text-[11px] font-semibold text-slate-500 hover:text-white"
+                className="ml-1 text-[11px] font-semibold text-subtle hover:text-ink"
               >
                 Clear all
               </button>
@@ -289,17 +271,17 @@ export default function WhatsappSalesLeadsPage() {
         {/* Results */}
         {filtered.length === 0 ? (
           <div className={cn(CARD, "flex flex-col items-center px-6 py-16 text-center")}>
-            <span className="grid size-12 place-items-center rounded-2xl bg-white/[0.04] text-slate-500">
+            <span className="grid size-12 place-items-center rounded-2xl bg-well text-subtle">
               <Users className="size-5" />
             </span>
-            <p className="mt-4 text-[15px] font-semibold text-white">No leads match</p>
-            <p className="mt-1 max-w-[36ch] text-[13px] text-slate-500">
+            <p className="mt-4 text-[15px] font-semibold text-ink">No leads match</p>
+            <p className="mt-1 max-w-[36ch] text-[13px] text-subtle">
               Try clearing filters or searching by a different name, phone, or source.
             </p>
             <button
               type="button"
               onClick={() => setFilters(EMPTY)}
-              className="mt-5 rounded-xl bg-indigo-500 px-4 py-2 text-[13px] font-semibold text-white hover:bg-indigo-400"
+              className="mt-5 rounded-xl bg-brand px-4 py-2 text-[13px] font-semibold text-white hover:bg-brand-strong"
             >
               Clear filters
             </button>
@@ -309,7 +291,7 @@ export default function WhatsappSalesLeadsPage() {
             <div className={cn(CARD, "hidden overflow-hidden md:block")}>
               <div className="overflow-x-auto">
                 <table className="min-w-[1080px] w-full text-left text-[13px]">
-                  <thead className="sticky top-0 z-10 border-b border-white/[0.06] bg-[#0e131c] text-[11px] uppercase tracking-wider text-slate-500">
+                  <thead className="sticky top-0 z-10 border-b border-line bg-surface-muted text-[11px] uppercase tracking-wider text-subtle">
                     <tr>
                       <th className="px-4 py-3.5 font-semibold">Lead</th>
                       <th className="px-4 py-3.5 font-semibold">Market</th>
@@ -321,7 +303,7 @@ export default function WhatsappSalesLeadsPage() {
                       <th className="px-4 py-3.5 font-semibold">Rep</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.05]">
+                  <tbody className="divide-y divide-line">
                     {filtered.map((l) => (
                       <tr
                         key={l.id}
@@ -334,7 +316,7 @@ export default function WhatsappSalesLeadsPage() {
                             openLead(l.id);
                           }
                         }}
-                        className="cursor-pointer transition-colors hover:bg-white/[0.03] focus-visible:bg-indigo-500/10 focus-visible:outline-none"
+                        className="cursor-pointer transition-colors hover:bg-well focus-visible:bg-brand-soft focus-visible:outline-none"
                       >
                         <td className="px-4 py-3.5">
                           <div className="flex items-center gap-3">
@@ -344,25 +326,25 @@ export default function WhatsappSalesLeadsPage() {
                               tone="indigo"
                             />
                             <span className="min-w-0">
-                              <span className="block font-semibold text-white">
+                              <span className="block font-semibold text-ink">
                                 {l.firstName} {l.lastName}
                               </span>
-                              <span className="block truncate text-[12px] text-slate-500">{l.phone}</span>
+                              <span className="block truncate text-[12px] text-subtle">{l.phone}</span>
                             </span>
                           </div>
                         </td>
-                        <td className="px-4 py-3.5 text-slate-300">{l.marketInterest || "—"}</td>
-                        <td className="px-4 py-3.5 text-slate-300">{l.budget || "—"}</td>
+                        <td className="px-4 py-3.5 text-ink-3">{l.marketInterest || "—"}</td>
+                        <td className="px-4 py-3.5 text-ink-3">{l.budget || "—"}</td>
                         <td className="px-4 py-3.5">
                           <Badge className={interestBadgeClass(l.interest)}>{l.interest}</Badge>
                         </td>
                         <td className="px-4 py-3.5">
                           <Badge className={statusBadgeClass(l.status)}>{l.status}</Badge>
                         </td>
-                        <td className="px-4 py-3.5 text-slate-400">
+                        <td className="px-4 py-3.5 text-muted">
                           {formatDisplayDate(l.lastResponseAt || l.lastContactedAt)}
                         </td>
-                        <td className="max-w-[180px] truncate px-4 py-3.5 text-slate-400">
+                        <td className="max-w-[180px] truncate px-4 py-3.5 text-muted">
                           {l.sourceWebinar || l.leadSource}
                         </td>
                         <td className="px-4 py-3.5">
@@ -373,7 +355,7 @@ export default function WhatsappSalesLeadsPage() {
                               tone="slate"
                               size="sm"
                             />
-                            <span className="truncate text-slate-300">{l.assignedRep}</span>
+                            <span className="truncate text-ink-3">{l.assignedRep}</span>
                           </div>
                         </td>
                       </tr>
@@ -389,7 +371,7 @@ export default function WhatsappSalesLeadsPage() {
                   <button
                     type="button"
                     onClick={() => openLead(l.id)}
-                    className={cn(CARD, "flex w-full flex-col gap-3 p-4 text-left transition-colors hover:border-indigo-500/30")}
+                    className={cn(CARD, "flex w-full flex-col gap-3 p-4 text-left transition-colors hover:border-brand/30")}
                   >
                     <div className="flex items-start gap-3">
                       <CircleAvatar
@@ -398,21 +380,21 @@ export default function WhatsappSalesLeadsPage() {
                         tone="indigo"
                       />
                       <span className="min-w-0 flex-1">
-                        <span className="block text-[14px] font-semibold text-white">
+                        <span className="block text-[14px] font-semibold text-ink">
                           {l.firstName} {l.lastName}
                         </span>
-                        <span className="mt-0.5 block text-[12px] text-slate-500">{l.phone}</span>
+                        <span className="mt-0.5 block text-[12px] text-subtle">{l.phone}</span>
                       </span>
                       <Badge className={interestBadgeClass(l.interest)}>{l.interest}</Badge>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       <Badge className={statusBadgeClass(l.status)}>{l.status}</Badge>
-                      <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
+                      <span className="rounded-full border border-line bg-well px-2 py-0.5 text-[11px] text-muted">
                         {l.marketInterest || "—"} · {l.budget || "Budget TBC"}
                       </span>
                     </div>
-                    <p className="line-clamp-2 text-[12px] text-slate-500">{l.conversationSummary}</p>
-                    <div className="flex items-center justify-between gap-3 text-[11px] text-slate-500">
+                    <p className="line-clamp-2 text-[12px] text-subtle">{l.conversationSummary}</p>
+                    <div className="flex items-center justify-between gap-3 text-[11px] text-subtle">
                       <span className="inline-flex min-w-0 items-center gap-2">
                         <CircleAvatar
                           label={l.assignedRep}
@@ -465,8 +447,8 @@ function CircleAvatar({
         "grid shrink-0 place-items-center rounded-full border font-bold uppercase tracking-wide",
         size === "sm" ? "size-7 text-[10px]" : "size-9 text-[11px]",
         tone === "indigo"
-          ? "border-indigo-400/25 bg-indigo-500/20 text-indigo-100"
-          : "border-white/10 bg-white/[0.08] text-slate-200",
+          ? "border-brand/25 bg-brand-soft text-brand-ink"
+          : "border-line bg-well text-ink-2",
       )}
     >
       {initials}

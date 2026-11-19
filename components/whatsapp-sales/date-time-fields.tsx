@@ -3,15 +3,11 @@
 import { useRef } from "react";
 import { Calendar, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const CONTROL =
-  "w-full rounded-lg border border-white/10 bg-white/[0.03] text-[13px] text-slate-200 " +
-  "placeholder:text-slate-500 transition-colors " +
-  "focus-visible:border-indigo-500/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500";
+import { CONTROL_BASE } from "@/lib/ui";
 
 /** Hide native indicator but keep it stretched so the whole field opens the picker. */
 const NATIVE_PICKER_HIT =
-  "[color-scheme:dark] cursor-pointer " +
+  "cursor-pointer " +
   "[&::-webkit-calendar-picker-indicator]:absolute " +
   "[&::-webkit-calendar-picker-indicator]:inset-0 " +
   "[&::-webkit-calendar-picker-indicator]:h-full " +
@@ -57,9 +53,9 @@ export function DatePickerField({
   const ref = useRef<HTMLInputElement>(null);
 
   return (
-    <label className={cn("block text-[11px] text-slate-400", className)}>
-      {label}
-      <div className="relative mt-1">
+    <label className={cn("block", className)}>
+      <span className="mb-1.5 block text-[12px] font-medium text-ink-3">{label}</span>
+      <div className="relative">
         <input
           ref={ref}
           type="date"
@@ -67,16 +63,16 @@ export function DatePickerField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onClick={() => openPicker(ref.current)}
-          className={cn(CONTROL, NATIVE_PICKER_HIT, "relative h-9 px-3 py-1.5 pr-9")}
+          className={cn(CONTROL_BASE, NATIVE_PICKER_HIT, "relative px-3 py-2.5 pr-9")}
         />
         <button
           type="button"
           tabIndex={-1}
           aria-label="Open date picker"
           onClick={() => openPicker(ref.current)}
-          className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded p-0.5 text-slate-400 hover:text-white"
+          className="absolute right-2.5 top-1/2 z-10 -translate-y-1/2 rounded p-0.5 text-muted hover:text-ink"
         >
-          <Calendar className="size-3.5" />
+          <Calendar className="size-4" />
         </button>
       </div>
     </label>
@@ -92,41 +88,39 @@ export function TimePickerField({
   compact,
 }: {
   label: string;
-  /** HH:mm value for the native time input */
   value: string;
   onChange: (hhmm: string) => void;
   className?: string;
   timezone?: string;
-  /** Hide the timezone hint (use in dense modals). */
   compact?: boolean;
 }) {
   const ref = useRef<HTMLInputElement>(null);
 
   return (
-    <label className={cn("block text-[11px] text-slate-400", className)}>
-      {label}{compact ? ` · ${timezone}` : ""}
-      <div className="relative mt-1">
+    <label className={cn("block", className)}>
+      <span className="mb-1.5 block text-[12px] font-medium text-ink-3">
+        {label}
+        {!compact && <span className="ml-1 font-normal text-subtle">· {timezone}</span>}
+      </span>
+      <div className="relative">
         <input
           ref={ref}
           type="time"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onClick={() => openPicker(ref.current)}
-          className={cn(CONTROL, NATIVE_PICKER_HIT, "relative h-9 px-3 py-1.5 pr-9")}
+          className={cn(CONTROL_BASE, NATIVE_PICKER_HIT, "relative px-3 py-2.5 pr-9")}
         />
         <button
           type="button"
           tabIndex={-1}
           aria-label="Open time picker"
           onClick={() => openPicker(ref.current)}
-          className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded p-0.5 text-slate-400 hover:text-white"
+          className="absolute right-2.5 top-1/2 z-10 -translate-y-1/2 rounded p-0.5 text-muted hover:text-ink"
         >
-          <Clock className="size-3.5" />
+          <Clock className="size-4" />
         </button>
       </div>
-      {!compact && (
-        <span className="mt-0.5 block text-[10px] text-slate-600">Stored as local time · {timezone}</span>
-      )}
     </label>
   );
 }

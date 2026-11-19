@@ -4,6 +4,7 @@ import { Suspense, useEffect, useMemo, useState, useSyncExternalStore } from "re
 import { useRouter, useSearchParams } from "next/navigation";
 import { CalendarDays, ChevronLeft, ChevronRight, MessageSquare, Percent, Plus, Search, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { OutcomesStrip } from "@/components/cockpit/outcomes-strip";
 import { AddWebinarDialog } from "@/components/whatsapp-sales/add-webinar-dialog";
 import { WhatsappSalesCockpitShell } from "@/components/whatsapp-sales/cockpit-shell";
 import { FilterSelect } from "@/components/whatsapp-sales/filter-select";
@@ -12,14 +13,14 @@ import { useWhatsappSalesWorkerName } from "@/components/whatsapp-sales/use-work
 import { listWebinars, subscribeWebinars } from "@/components/whatsapp-sales/webinar-store";
 import type { OutreachMode } from "@/components/whatsapp-sales/types";
 
-const CARD = "rounded-2xl border border-white/[0.07] bg-[#0c1018]";
+const CARD = "card-surface";
 const PAGE_SIZE = 10;
 
 export default function WhatsappSalesWebinarsPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-dvh items-center justify-center bg-[#05070d] text-sm text-slate-500">
+        <div className="flex min-h-dvh items-center justify-center bg-canvas text-sm text-subtle">
           Loading webinars…
         </div>
       }
@@ -118,17 +119,17 @@ function WhatsappSalesWebinarsPageInner() {
 
   return (
     <WhatsappSalesCockpitShell agentId={agentId} workerName={workerName} active="webinars">
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-5">
+      <div className="flex w-full flex-col gap-5">
         <header className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-[28px] font-bold tracking-[-0.03em] text-white">Webinars</h1>
-              <p className="mt-1 max-w-[56ch] text-[14px] text-slate-400">
+              <h1 className="text-[28px] font-bold tracking-[-0.03em] text-ink">Webinars</h1>
+              <p className="mt-1 max-w-[56ch] text-[14px] text-muted">
                 Upcoming events, relevance matching, and Manual / Automatic outreach.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <p className="text-[12.5px] text-slate-500">
+              <p className="text-[12.5px] text-subtle">
                 {filtered.length === 0
                   ? `0 showing · ${workerName}`
                   : `${rangeStart}–${rangeEnd} of ${filtered.length} · ${workerName}`}
@@ -136,51 +137,52 @@ function WhatsappSalesWebinarsPageInner() {
               <button
                 type="button"
                 onClick={() => setAddOpen(true)}
-                className="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-3.5 py-2 text-[13px] font-semibold text-white hover:bg-indigo-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand px-3.5 py-2 text-[13px] font-semibold text-white hover:bg-brand-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
               >
                 <Plus className="size-3.5" /> Add webinar
               </button>
             </div>
           </div>
 
-          <div className={cn(CARD, "flex flex-wrap items-stretch divide-x divide-white/[0.06]")}>
-            <div className="flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3">
-              <span className="grid size-8 place-items-center rounded-lg bg-indigo-500/15 text-indigo-300">
-                <CalendarDays className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-white">{webinars.length}</p>
-                <p className="mt-1 text-[11px] text-slate-500">Upcoming</p>
-              </div>
-            </div>
-            <div className="flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3">
-              <span className="grid size-8 place-items-center rounded-lg bg-white/[0.05] text-slate-400">
-                <Users className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-white">{totalRelevant}</p>
-                <p className="mt-1 text-[11px] text-slate-500">Relevant leads</p>
-              </div>
-            </div>
-            <div className="flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3">
-              <span className="grid size-8 place-items-center rounded-lg bg-emerald-500/15 text-emerald-300">
-                <MessageSquare className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-emerald-300">{eligible}</p>
-                <p className="mt-1 text-[11px] text-slate-500">Eligible · pool-wide</p>
-              </div>
-            </div>
-            <div className="flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3">
-              <span className="grid size-8 place-items-center rounded-lg bg-cyan-500/15 text-cyan-300">
-                <Percent className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-cyan-300">{avgResponse}%</p>
-                <p className="mt-1 text-[11px] text-slate-500">Avg response</p>
-              </div>
-            </div>
-          </div>
+          <OutcomesStrip
+            variant="compact"
+            title="Webinar outreach"
+            tiles={[
+              {
+                value: String(webinars.length),
+                label: "Upcoming",
+                tone: "brand",
+                icon: CalendarDays,
+                caption: "Events in scope",
+                spark: [35, 42, 48, 55, 62],
+              },
+              {
+                value: String(totalRelevant),
+                label: "Relevant leads",
+                tone: "brand",
+                icon: Users,
+                caption: "Matched attributes",
+                spark: [40, 45, 50, 58, 65],
+              },
+              {
+                value: String(eligible),
+                label: "WhatsApp eligible",
+                tone: "success",
+                trend: "up",
+                icon: MessageSquare,
+                caption: "Pool-wide",
+                spark: [45, 50, 55, 60, 68],
+              },
+              {
+                value: `${avgResponse}%`,
+                label: "Avg response",
+                tone: "success",
+                icon: Percent,
+                caption: "Across webinars",
+                spark: [30, 38, 45, 52, 58],
+              },
+            ]}
+          />
 
           <div className="flex flex-wrap gap-1.5">
             {([
@@ -195,10 +197,10 @@ function WhatsappSalesWebinarsPageInner() {
                   type="button"
                   onClick={() => setMode(pill.value)}
                   className={cn(
-                    "rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/50",
+                    "rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40",
                     on
-                      ? "bg-indigo-500 text-white"
-                      : "border border-white/[0.08] bg-white/[0.03] text-slate-400 hover:bg-white/[0.06] hover:text-white",
+                      ? "bg-brand text-white"
+                      : "border border-line bg-well text-muted hover:bg-well hover:text-ink",
                   )}
                 >
                   {pill.label}
@@ -211,14 +213,14 @@ function WhatsappSalesWebinarsPageInner() {
         <section className={cn(CARD, "p-4 sm:p-5")}>
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
             <label className="relative min-w-0 flex-1">
-              <span className="mb-1.5 block text-[11px] text-slate-500">Search</span>
+              <span className="mb-1.5 block text-[11px] text-subtle">Search</span>
               <span className="relative block">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-subtle" />
                 <input
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
                   placeholder="Title, market, location…"
-                  className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] pl-10 pr-3 text-sm text-slate-200 placeholder:text-slate-500 outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/30"
+                  className="h-10 w-full rounded-xl border border-line bg-well pl-10 pr-3 text-sm text-ink-2 placeholder:text-subtle outline-none focus:border-brand/50 focus:ring-2 focus:ring-brand/30"
                 />
               </span>
             </label>
@@ -230,19 +232,19 @@ function WhatsappSalesWebinarsPageInner() {
           </div>
 
           {chips.length > 0 && (
-            <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-white/[0.06] pt-3">
+            <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-line pt-3">
               {chips.map((chip) => (
                 <button
                   key={chip.key}
                   type="button"
                   onClick={chip.clear}
-                  className="inline-flex items-center gap-1 rounded-full border border-indigo-500/25 bg-indigo-500/10 px-2.5 py-1 text-[11px] font-medium text-indigo-200 hover:bg-indigo-500/20"
+                  className="inline-flex items-center gap-1 rounded-full border border-brand/25 bg-brand-soft px-2.5 py-1 text-[11px] font-medium text-brand-ink hover:bg-brand-soft"
                 >
                   {chip.label}
                   <X className="size-3 opacity-70" />
                 </button>
               ))}
-              <button type="button" onClick={clearAll} className="ml-1 text-[11px] font-semibold text-slate-500 hover:text-white">
+              <button type="button" onClick={clearAll} className="ml-1 text-[11px] font-semibold text-subtle hover:text-ink">
                 Clear all
               </button>
             </div>
@@ -251,13 +253,13 @@ function WhatsappSalesWebinarsPageInner() {
 
         {filtered.length === 0 ? (
           <div className={cn(CARD, "flex flex-col items-center px-6 py-16 text-center")}>
-            <span className="grid size-12 place-items-center rounded-2xl bg-white/[0.04] text-slate-500">
+            <span className="grid size-12 place-items-center rounded-2xl bg-well text-subtle">
               <CalendarDays className="size-5" />
             </span>
-            <p className="mt-4 text-[15px] font-semibold text-white">
+            <p className="mt-4 text-[15px] font-semibold text-ink">
               {webinars.length === 0 ? "No webinars yet" : "No webinars match"}
             </p>
-            <p className="mt-1 max-w-[36ch] text-[13px] text-slate-500">
+            <p className="mt-1 max-w-[36ch] text-[13px] text-subtle">
               {webinars.length === 0
                 ? "Add upcoming webinar context for relevance matching and outreach."
                 : "Try clearing filters or searching a different title, market, or date."}
@@ -267,7 +269,7 @@ function WhatsappSalesWebinarsPageInner() {
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-[13px] font-semibold text-slate-300 hover:bg-white/[0.06]"
+                  className="rounded-xl border border-line bg-well px-4 py-2 text-[13px] font-semibold text-ink-3 hover:bg-well"
                 >
                   Clear filters
                 </button>
@@ -275,7 +277,7 @@ function WhatsappSalesWebinarsPageInner() {
               <button
                 type="button"
                 onClick={() => setAddOpen(true)}
-                className="rounded-xl bg-indigo-500 px-4 py-2 text-[13px] font-semibold text-white hover:bg-indigo-400"
+                className="rounded-xl bg-brand px-4 py-2 text-[13px] font-semibold text-white hover:bg-brand-strong"
               >
                 Add webinar
               </button>
@@ -286,7 +288,7 @@ function WhatsappSalesWebinarsPageInner() {
             <div className={cn(CARD, "hidden overflow-hidden md:block")}>
               <div className="overflow-x-auto">
                 <table className="min-w-[960px] w-full text-left text-[13px]">
-                  <thead className="sticky top-0 z-10 border-b border-white/[0.06] bg-[#0e131c] text-[11px] uppercase tracking-wider text-slate-500">
+                  <thead className="sticky top-0 z-10 border-b border-line bg-surface-muted text-[11px] uppercase tracking-wider text-subtle">
                     <tr>
                       <th className="px-4 py-3.5 font-semibold">Title</th>
                       <th className="px-4 py-3.5 font-semibold">Market / locations</th>
@@ -297,7 +299,7 @@ function WhatsappSalesWebinarsPageInner() {
                       <th className="px-4 py-3.5 font-semibold">Mode</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.05]">
+                  <tbody className="divide-y divide-line">
                     {pageItems.map((w) => {
                       const rate = w.contactedCount
                         ? Math.round((w.responseCount / w.contactedCount) * 100)
@@ -314,37 +316,37 @@ function WhatsappSalesWebinarsPageInner() {
                               openWebinar(w.id);
                             }
                           }}
-                          className="cursor-pointer transition-colors hover:bg-white/[0.03] focus-visible:bg-indigo-500/10 focus-visible:outline-none"
+                          className="cursor-pointer transition-colors hover:bg-well focus-visible:bg-brand-soft focus-visible:outline-none"
                         >
                           <td className="px-4 py-3.5">
                             <div className="flex items-center gap-3">
-                              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-indigo-500/15 text-indigo-300">
+                              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-ink">
                                 <CalendarDays className="size-3.5" />
                               </span>
                               <span className="min-w-0">
-                                <span className="block font-semibold text-white">{w.title}</span>
-                                <span className="block truncate text-[12px] text-slate-500 line-clamp-1">
+                                <span className="block font-semibold text-ink">{w.title}</span>
+                                <span className="block truncate text-[12px] text-subtle line-clamp-1">
                                   {w.description}
                                 </span>
                               </span>
                             </div>
                           </td>
-                          <td className="px-4 py-3.5 text-slate-300">
+                          <td className="px-4 py-3.5 text-ink-3">
                             {w.investmentMarket}
-                            <span className="block text-[12px] text-slate-500">
+                            <span className="block text-[12px] text-subtle">
                               {w.relevantLocations.join(", ") || "—"}
                             </span>
                           </td>
-                          <td className="px-4 py-3.5 text-slate-300">
+                          <td className="px-4 py-3.5 text-ink-3">
                             {w.eventDate}
-                            <span className="block text-[12px] text-slate-500">{w.eventTime}</span>
+                            <span className="block text-[12px] text-subtle">{w.eventTime}</span>
                           </td>
-                          <td className="px-4 py-3.5 font-semibold text-white">{w.relevantLeadIds.length}</td>
-                          <td className="px-4 py-3.5 text-slate-300">{w.contactedCount}</td>
+                          <td className="px-4 py-3.5 font-semibold text-ink">{w.relevantLeadIds.length}</td>
+                          <td className="px-4 py-3.5 text-ink-3">{w.contactedCount}</td>
                           <td className="px-4 py-3.5">
                             <span className={cn(
                               "font-medium",
-                              rate >= 50 ? "text-emerald-300" : rate > 0 ? "text-amber-300" : "text-slate-400",
+                              rate >= 50 ? "text-success" : rate > 0 ? "text-warning" : "text-muted",
                             )}>
                               {rate}%
                             </span>
@@ -354,7 +356,7 @@ function WhatsappSalesWebinarsPageInner() {
                               "rounded-full border px-2 py-0.5 text-[10px] font-medium",
                               w.outreachMode === "Automatic"
                                 ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-300"
-                                : "border-white/10 bg-white/[0.04] text-slate-400",
+                                : "border-line bg-well text-muted",
                             )}>
                               {w.outreachMode}
                             </span>
@@ -377,15 +379,15 @@ function WhatsappSalesWebinarsPageInner() {
                     <button
                       type="button"
                       onClick={() => openWebinar(w.id)}
-                      className={cn(CARD, "flex w-full flex-col gap-3 p-4 text-left transition-colors hover:border-indigo-500/30")}
+                      className={cn(CARD, "flex w-full flex-col gap-3 p-4 text-left transition-colors hover:border-brand/30")}
                     >
                       <div className="flex items-start gap-3">
-                        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-indigo-500/15 text-indigo-300">
+                        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-ink">
                           <CalendarDays className="size-4" />
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block text-[14px] font-semibold text-white">{w.title}</span>
-                          <span className="mt-0.5 block text-[12px] text-slate-500">
+                          <span className="block text-[14px] font-semibold text-ink">{w.title}</span>
+                          <span className="mt-0.5 block text-[12px] text-subtle">
                             {w.investmentMarket} · {w.eventDate} · {w.eventTime}
                           </span>
                         </span>
@@ -393,16 +395,16 @@ function WhatsappSalesWebinarsPageInner() {
                           "rounded-full border px-2 py-0.5 text-[10px] font-medium",
                           w.outreachMode === "Automatic"
                             ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-300"
-                            : "border-white/10 bg-white/[0.04] text-slate-400",
+                            : "border-line bg-well text-muted",
                         )}>
                           {w.outreachMode}
                         </span>
                       </div>
-                      <p className="line-clamp-2 text-[12px] text-slate-500">{w.description}</p>
-                      <div className="flex flex-wrap gap-3 text-[12px] text-slate-400">
-                        <span><strong className="text-white">{w.relevantLeadIds.length}</strong> relevant</span>
-                        <span><strong className="text-white">{w.contactedCount}</strong> contacted</span>
-                        <span><strong className="text-white">{rate}%</strong> response</span>
+                      <p className="line-clamp-2 text-[12px] text-subtle">{w.description}</p>
+                      <div className="flex flex-wrap gap-3 text-[12px] text-muted">
+                        <span><strong className="text-ink">{w.relevantLeadIds.length}</strong> relevant</span>
+                        <span><strong className="text-ink">{w.contactedCount}</strong> contacted</span>
+                        <span><strong className="text-ink">{rate}%</strong> response</span>
                       </div>
                     </button>
                   </li>
@@ -412,7 +414,7 @@ function WhatsappSalesWebinarsPageInner() {
 
             {filtered.length > 0 && (
               <div className={cn(CARD, "flex flex-wrap items-center justify-between gap-3 px-4 py-3")}>
-                <p className="text-[12px] text-slate-500" aria-live="polite">
+                <p className="text-[12px] text-subtle" aria-live="polite">
                   Showing {rangeStart}–{rangeEnd} of {filtered.length}
                 </p>
                 {pageCount > 1 ? (
@@ -422,7 +424,7 @@ function WhatsappSalesWebinarsPageInner() {
                       onClick={() => setPage((p) => Math.max(0, p - 1))}
                       disabled={safePage === 0}
                       aria-label="Previous page"
-                      className="grid size-8 place-items-center rounded-lg border border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60 disabled:opacity-40"
+                      className="grid size-8 place-items-center rounded-lg border border-line bg-well text-ink-3 hover:bg-well focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 disabled:opacity-40"
                     >
                       <ChevronLeft className="size-3.5" />
                     </button>
@@ -436,10 +438,10 @@ function WhatsappSalesWebinarsPageInner() {
                           aria-label={`Page ${i + 1}`}
                           aria-current={active ? "page" : undefined}
                           className={cn(
-                            "grid size-8 place-items-center rounded-lg text-[12px] font-semibold tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60",
+                            "grid size-8 place-items-center rounded-lg text-[12px] font-semibold tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40",
                             active
-                              ? "bg-indigo-500 text-white"
-                              : "border border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.06]",
+                              ? "bg-brand text-white"
+                              : "border border-line bg-well text-ink-3 hover:bg-well",
                           )}
                         >
                           {i + 1}
@@ -451,7 +453,7 @@ function WhatsappSalesWebinarsPageInner() {
                       onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
                       disabled={safePage >= pageCount - 1}
                       aria-label="Next page"
-                      className="grid size-8 place-items-center rounded-lg border border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60 disabled:opacity-40"
+                      className="grid size-8 place-items-center rounded-lg border border-line bg-well text-ink-3 hover:bg-well focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 disabled:opacity-40"
                     >
                       <ChevronRight className="size-3.5" />
                     </button>

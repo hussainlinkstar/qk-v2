@@ -3,6 +3,9 @@ export const MOCK_LOGIN = {
   password: "Admin@123",
 } as const;
 
+/** Extra preview emails accepted for CRM-aligned demos. */
+const EXTRA_EMAILS = new Set(["admin@qiko.ai", "demo@qiko.ai"]);
+
 const STORAGE_KEY = "qk-v2-mock-auth";
 
 export function isMockAuthenticated(): boolean {
@@ -24,8 +27,6 @@ export function setMockAuthenticated(value: boolean): void {
 }
 
 export function validateMockLogin(email: string, password: string): boolean {
-  return (
-    email.trim().toLowerCase() === MOCK_LOGIN.email
-    && password === MOCK_LOGIN.password
-  );
+  const normalized = email.trim().toLowerCase();
+  return EXTRA_EMAILS.has(normalized) && password === MOCK_LOGIN.password;
 }

@@ -13,7 +13,7 @@ import {
   formatDisplayDate, interestBadgeClass, statusBadgeClass,
 } from "@/components/whatsapp-sales/utils";
 
-const CARD = "rounded-2xl border border-white/[0.07] bg-[#0c1018]";
+const CARD = "card-surface";
 
 export default function WhatsappSalesLeadDetailPage() {
   const { leadId } = useParams<{ leadId: string }>();
@@ -25,17 +25,17 @@ export default function WhatsappSalesLeadDetailPage() {
 
   return (
     <WhatsappSalesCockpitShell agentId={agentId} workerName={workerName} active="leads">
-      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-5">
+      <div className="flex w-full flex-col gap-5">
         <button
           type="button"
           onClick={() => router.push(`/leads`)}
-          className="inline-flex w-fit items-center gap-1.5 text-[13px] text-slate-400 underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
+          className="inline-flex w-fit items-center gap-1.5 text-[13px] text-muted underline-offset-4 hover:text-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
         >
           <ArrowLeft className="size-3.5" /> Back to leads
         </button>
 
         {!lead ? (
-          <div className={cn(CARD, "border-dashed px-6 py-16 text-center text-sm text-slate-500")}>
+          <div className={cn(CARD, "border-dashed px-6 py-16 text-center text-sm text-subtle")}>
             Lead not found in mock data.
           </div>
         ) : (
@@ -44,20 +44,20 @@ export default function WhatsappSalesLeadDetailPage() {
             <header className={cn(CARD, "p-5 sm:p-6")}>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex min-w-0 items-start gap-3.5">
-                  <span className="grid size-12 shrink-0 place-items-center rounded-full border border-indigo-400/25 bg-indigo-500/20 text-[14px] font-bold uppercase tracking-wide text-indigo-100">
+                  <span className="grid size-12 shrink-0 place-items-center rounded-full border border-brand/25 bg-brand-soft text-[14px] font-bold uppercase tracking-wide text-brand-ink">
                     {lead.firstName[0]}{lead.lastName[0]}
                   </span>
                   <div className="min-w-0">
-                    <h1 className="text-[24px] font-bold tracking-[-0.03em] text-white sm:text-[28px]">
+                    <h1 className="text-[24px] font-bold tracking-[-0.03em] text-ink sm:text-[28px]">
                       {lead.firstName} {lead.lastName}
                     </h1>
-                    <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-slate-400">
+                    <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted">
                       <span className="inline-flex items-center gap-1.5">
-                        <Mail className="size-3.5 text-slate-500" />
+                        <Mail className="size-3.5 text-subtle" />
                         {lead.email}
                       </span>
                       <span className="inline-flex items-center gap-1.5">
-                        <Phone className="size-3.5 text-slate-500" />
+                        <Phone className="size-3.5 text-subtle" />
                         {lead.phone}
                       </span>
                     </p>
@@ -65,42 +65,42 @@ export default function WhatsappSalesLeadDetailPage() {
                       <Badge className={interestBadgeClass(lead.interest)}>{lead.interest} interest</Badge>
                       <Badge className={statusBadgeClass(lead.status)}>{lead.status}</Badge>
                       {handoffActive && (
-                        <Badge className="border-red-500/25 bg-red-500/10 text-red-300">Handoff paused</Badge>
+                        <Badge className="border-transparent bg-danger-soft text-danger">Handoff paused</Badge>
                       )}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
-                  <span className="grid size-8 place-items-center rounded-full border border-white/10 bg-white/[0.08] text-[10px] font-bold uppercase text-slate-200">
+                <div className="flex items-center gap-2.5 rounded-xl border border-line bg-surface-muted px-3 py-2.5">
+                  <span className="grid size-8 place-items-center rounded-full border border-line bg-well text-[10px] font-bold uppercase text-ink-2">
                     {nameInitials(lead.assignedRep)}
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-wider text-slate-500">Assigned rep</p>
-                    <p className="truncate text-[13px] font-medium text-white">{lead.assignedRep}</p>
+                    <p className="text-[10px] uppercase tracking-wider text-subtle">Assigned rep</p>
+                    <p className="truncate text-[13px] font-medium text-ink">{lead.assignedRep}</p>
                   </div>
                 </div>
               </div>
 
-              <p className="mt-5 max-w-[70ch] text-[13.5px] leading-relaxed text-slate-300">{lead.summary}</p>
+              <p className="mt-5 max-w-[70ch] text-[13.5px] leading-relaxed text-ink-3">{lead.summary}</p>
 
               <div className="mt-5">
                 <div className="mb-2 flex items-center justify-between gap-2 text-[12px]">
-                  <span className="text-slate-500">Qualification</span>
-                  <span className="font-semibold text-slate-300">{lead.qualificationProgress}%</span>
+                  <span className="text-subtle">Qualification</span>
+                  <span className="font-semibold text-ink-3">{lead.qualificationProgress}%</span>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-white/[0.06]">
+                <div className="h-2 overflow-hidden rounded-full bg-well">
                   <div
-                    className="h-full rounded-full bg-indigo-500"
+                    className="h-full rounded-full bg-brand"
                     style={{ width: `${lead.qualificationProgress}%` }}
                   />
                 </div>
-                <p className="mt-1.5 text-[12px] text-slate-500">{lead.conversationStage}</p>
+                <p className="mt-1.5 text-[12px] text-subtle">{lead.conversationStage}</p>
               </div>
             </header>
 
             {/* Compact strip */}
-            <div className={cn(CARD, "flex flex-wrap items-stretch divide-x divide-white/[0.06]")}>
+            <div className={cn(CARD, "flex flex-wrap items-stretch divide-x divide-line")}>
               <StripStat label="Market" value={lead.marketInterest || "—"} />
               <StripStat label="Budget" value={lead.budget || "TBC"} />
               <StripStat label="Readiness" value={lead.readiness} />
@@ -123,7 +123,7 @@ export default function WhatsappSalesLeadDetailPage() {
 
                 <section className={cn(CARD, "p-5")}>
                   <SectionTitle icon={MessageSquare} title="Agent assessment" />
-                  <p className="mt-3 text-[13px] leading-relaxed text-slate-300">{lead.conversationSummary}</p>
+                  <p className="mt-3 text-[13px] leading-relaxed text-ink-3">{lead.conversationSummary}</p>
                   <div className="mt-4 grid gap-2 sm:grid-cols-2">
                     <Fact label="Interest" value={lead.interest} />
                     <Fact label="Readiness" value={lead.readiness} />
@@ -138,15 +138,15 @@ export default function WhatsappSalesLeadDetailPage() {
                 </section>
 
                 <section className={cn(CARD, "overflow-hidden")}>
-                  <div className="border-b border-white/[0.06] px-5 py-3.5">
+                  <div className="border-b border-line px-5 py-3.5">
                     <SectionTitle icon={MessageSquare} title="Conversation context" />
-                    <p className="mt-1 text-[12px] text-slate-500">
+                    <p className="mt-1 text-[12px] text-subtle">
                       Recent WhatsApp messages — preview context, not the live Interakt inbox.
                     </p>
                   </div>
                   <div className="px-5 py-4">
                     {lead.messages.length === 0 ? (
-                      <p className="py-8 text-center text-sm text-slate-500">No messages yet.</p>
+                      <p className="py-8 text-center text-sm text-subtle">No messages yet.</p>
                     ) : (
                       <ul className="space-y-2.5">
                         {lead.messages.map((m) => (
@@ -161,12 +161,12 @@ export default function WhatsappSalesLeadDetailPage() {
                               className={cn(
                                 "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed",
                                 m.direction === "outbound"
-                                  ? "rounded-br-md bg-indigo-500/25 text-indigo-100"
-                                  : "rounded-bl-md border border-white/[0.06] bg-white/[0.03] text-slate-200",
+                                  ? "rounded-br-md bg-brand-soft text-brand-ink"
+                                  : "rounded-bl-md border border-line bg-well text-ink-2",
                               )}
                             >
                               <p>{m.text}</p>
-                              <p className="mt-1 text-[10px] text-slate-500">{formatDisplayDate(m.at)}</p>
+                              <p className="mt-1 text-[10px] text-subtle">{formatDisplayDate(m.at)}</p>
                             </div>
                           </li>
                         ))}
@@ -179,7 +179,7 @@ export default function WhatsappSalesLeadDetailPage() {
               <div className="flex flex-col gap-4">
                 <section className={cn(CARD, "p-5")}>
                   <SectionTitle icon={CalendarDays} title="Outreach & nurture" />
-                  <dl className="mt-4 space-y-0 divide-y divide-white/[0.05]">
+                  <dl className="mt-4 space-y-0 divide-y divide-line">
                     <Row label="Outreach status" value={lead.outreachStatus} />
                     <Row label="Last contacted" value={formatDisplayDate(lead.lastContactedAt)} />
                     <Row label="Last response" value={formatDisplayDate(lead.lastResponseAt)} />
@@ -191,24 +191,24 @@ export default function WhatsappSalesLeadDetailPage() {
                 </section>
 
                 <section className={cn(CARD, "p-5")}>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-subtle">
                     Handoff controls
                   </p>
                   {handoffActive || lead.handoff ? (
                     <div className="mt-3 space-y-3">
-                      <p className="text-[14px] font-semibold text-white">
+                      <p className="text-[14px] font-semibold text-ink">
                         {handoffActive ? "Paused for human follow-up" : "Automation resumed"}
                       </p>
-                      <p className="text-[13px] leading-relaxed text-slate-400">
+                      <p className="text-[13px] leading-relaxed text-muted">
                         {lead.handoffReason || "Lead asked to speak with a Joseph Mews advisor."}
                       </p>
-                      <div className="flex items-center gap-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
-                        <span className="grid size-8 place-items-center rounded-full border border-white/10 bg-white/[0.08] text-[10px] font-bold uppercase text-slate-200">
+                      <div className="flex items-center gap-2.5 rounded-xl border border-line bg-surface-muted px-3 py-2.5">
+                        <span className="grid size-8 place-items-center rounded-full border border-line bg-well text-[10px] font-bold uppercase text-ink-2">
                           {nameInitials(lead.assignedRep)}
                         </span>
                         <div>
-                          <p className="text-[10px] uppercase tracking-wider text-slate-500">Owner</p>
-                          <p className="text-[13px] font-medium text-white">{lead.assignedRep}</p>
+                          <p className="text-[10px] uppercase tracking-wider text-subtle">Owner</p>
+                          <p className="text-[13px] font-medium text-ink">{lead.assignedRep}</p>
                         </div>
                       </div>
                       {handoffActive ? (
@@ -218,18 +218,18 @@ export default function WhatsappSalesLeadDetailPage() {
                             setHandoffActive(false);
                             setResumeNote("Automation resumed (preview only — not persisted).");
                           }}
-                          className="inline-flex min-h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-indigo-500 px-4 text-[13px] font-semibold text-white hover:bg-indigo-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300"
+                          className="inline-flex min-h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-brand px-4 text-[13px] font-semibold text-white hover:bg-brand-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
                         >
                           <Check className="size-3.5" /> Resume automation
                         </button>
                       ) : (
-                        <p className="text-[12px] text-emerald-300">
+                        <p className="text-[12px] text-success">
                           {resumeNote || "Automation is active again."}
                         </p>
                       )}
                     </div>
                   ) : (
-                    <p className="mt-3 text-[13px] text-slate-500">
+                    <p className="mt-3 text-[13px] text-subtle">
                       No active handoff. Joe can keep nurturing this lead.
                     </p>
                   )}
@@ -261,10 +261,10 @@ function SectionTitle({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="grid size-7 place-items-center rounded-lg bg-indigo-500/15 text-indigo-300">
+      <span className="grid size-7 place-items-center rounded-lg bg-brand-soft text-brand-ink">
         <Icon className="size-3.5" />
       </span>
-      <h2 className="text-[14px] font-semibold text-white">{title}</h2>
+      <h2 className="text-[14px] font-semibold text-ink">{title}</h2>
     </div>
   );
 }
@@ -272,8 +272,8 @@ function SectionTitle({
 function StripStat({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex min-w-[7.5rem] flex-1 flex-col justify-center px-4 py-3">
-      <p className="text-[11px] text-slate-500">{label}</p>
-      <p className="mt-1 truncate text-[15px] font-semibold tracking-[-0.02em] text-white">{value}</p>
+      <p className="text-[11px] text-subtle">{label}</p>
+      <p className="mt-1 truncate text-[15px] font-semibold tracking-[-0.02em] text-ink">{value}</p>
     </div>
   );
 }
@@ -286,9 +286,9 @@ function Fact({
   className?: string;
 }) {
   return (
-    <div className={cn("rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5", className)}>
-      <p className="text-[10px] uppercase tracking-wider text-slate-500">{label}</p>
-      <p className="mt-1 text-[13px] font-medium text-slate-200">{value}</p>
+    <div className={cn("rounded-xl border border-line bg-surface-muted px-3 py-2.5", className)}>
+      <p className="text-[10px] uppercase tracking-wider text-subtle">{label}</p>
+      <p className="mt-1 text-[13px] font-medium text-ink-2">{value}</p>
     </div>
   );
 }
@@ -296,8 +296,8 @@ function Fact({
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-start justify-between gap-3 py-2.5 text-[13px]">
-      <dt className="text-slate-500">{label}</dt>
-      <dd className="text-right font-medium text-slate-200">{value}</dd>
+      <dt className="text-subtle">{label}</dt>
+      <dd className="text-right font-medium text-ink-2">{value}</dd>
     </div>
   );
 }

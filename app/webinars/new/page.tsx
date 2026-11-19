@@ -12,7 +12,7 @@ export default function WhatsappSalesNewWebinarRedirectPage() {
   }, [router]);
 
   return (
-    <div className="flex min-h-[40vh] items-center justify-center bg-[#05070d] text-sm text-slate-500">
+    <div className="flex min-h-[40vh] items-center justify-center bg-canvas text-sm text-subtle">
       Opening add webinar…
     </div>
   );

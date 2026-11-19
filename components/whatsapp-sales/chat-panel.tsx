@@ -95,23 +95,23 @@ export function WhatsappSalesChatPanel({
       />
       <aside
         className={cn(
-          "fixed bottom-0 right-0 top-14 z-40 flex min-h-0 flex-col border-l border-white/[0.06] bg-[#05070d] shadow-2xl shadow-black/50 transition-[width,left] duration-200",
+          "fixed bottom-0 right-0 top-14 z-40 flex min-h-0 flex-col border-l border-line bg-canvas shadow-2xl shadow-black/50 transition-[width,left] duration-200",
           expanded
             ? "left-0 w-full max-w-none sm:left-3 sm:right-3 sm:top-[3.75rem] sm:bottom-3 sm:w-auto sm:rounded-2xl sm:border"
             : "w-[min(420px,100vw)] max-w-[100vw]",
         )}
         aria-label={`Chat with ${workerName}`}
       >
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-white/[0.06] px-4 py-3">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-line px-4 py-3">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-indigo-500/15 text-indigo-300">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand-ink">
               <MessageSquare className="size-4" />
             </span>
             <div className="min-w-0">
-              <p className="truncate text-[13px] font-semibold text-white">
+              <p className="truncate text-[13px] font-semibold text-ink">
                 Chat with {workerName}
               </p>
-              <p className="flex items-center gap-1 text-[11px] text-slate-500">
+              <p className="flex items-center gap-1 text-[11px] text-subtle">
                 <span className="size-1.5 rounded-full bg-emerald-400" />
                 Available · lead & webinar context
               </p>
@@ -123,7 +123,7 @@ export function WhatsappSalesChatPanel({
               onClick={() => setExpanded((v) => !v)}
               aria-label={expanded ? "Restore chat size" : "Expand chat"}
               title={expanded ? "Restore" : "Expand"}
-              className="grid size-8 place-items-center rounded-md text-slate-500 hover:bg-white/[0.05] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
+              className="grid size-8 place-items-center rounded-md text-subtle hover:bg-well hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
             >
               {expanded ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
             </button>
@@ -132,7 +132,7 @@ export function WhatsappSalesChatPanel({
               onClick={onClose}
               aria-label="Close chat"
               title="Close"
-              className="grid size-8 place-items-center rounded-md text-slate-500 hover:bg-white/[0.05] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
+              className="grid size-8 place-items-center rounded-md text-subtle hover:bg-well hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
             >
               <X className="size-4" />
             </button>
@@ -142,13 +142,13 @@ export function WhatsappSalesChatPanel({
         <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
           {empty ? (
             <div className="flex h-full flex-col items-center justify-center px-2 text-center">
-              <span className="grid size-14 place-items-center rounded-2xl bg-indigo-500/10 text-indigo-300">
+              <span className="grid size-14 place-items-center rounded-2xl bg-brand-soft text-brand-ink">
                 <Sparkles className="size-6" />
               </span>
-              <p className="mt-4 text-[15px] font-semibold text-white">
+              <p className="mt-4 text-[15px] font-semibold text-ink">
                 Ask about a lead, webinar, or handoff
               </p>
-              <p className="mt-1.5 max-w-[280px] text-[12px] leading-relaxed text-slate-500">
+              <p className="mt-1.5 max-w-[280px] text-[12px] leading-relaxed text-subtle">
                 Preview answers use mock pool data. Live Interakt chat arrives with the backend branch.
               </p>
               <div className="mt-5 flex max-w-sm flex-wrap justify-center gap-1.5">
@@ -157,7 +157,7 @@ export function WhatsappSalesChatPanel({
                     key={s.prompt}
                     type="button"
                     onClick={() => submit(s.prompt)}
-                    className="rounded-full border border-white/[0.1] bg-white/[0.03] px-2.5 py-1 text-[11px] text-slate-300 transition-colors hover:border-indigo-500/35 hover:bg-white/[0.06] hover:text-white"
+                    className="rounded-full border border-white/[0.1] bg-well px-2.5 py-1 text-[11px] text-ink-3 transition-colors hover:border-indigo-500/35 hover:bg-well hover:text-ink"
                   >
                     {s.title}
                   </button>
@@ -175,8 +175,8 @@ export function WhatsappSalesChatPanel({
                     className={cn(
                       "max-w-[90%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed",
                       msg.role === "user"
-                        ? "rounded-br-md bg-indigo-500 text-white"
-                        : "rounded-bl-md border border-white/[0.06] bg-white/[0.03] text-slate-200",
+                        ? "rounded-br-md bg-brand text-white"
+                        : "rounded-bl-md border border-line bg-well text-ink-2",
                     )}
                   >
                     {msg.role === "user" ? (
@@ -189,7 +189,7 @@ export function WhatsappSalesChatPanel({
               ))}
               {pending && (
                 <div className="flex justify-start">
-                  <div className="rounded-2xl rounded-bl-md border border-white/[0.06] bg-white/[0.03] px-4 py-3">
+                  <div className="rounded-2xl rounded-bl-md border border-line bg-well px-4 py-3">
                     <TypingIndicator variant="gradient" />
                   </div>
                 </div>
@@ -204,9 +204,9 @@ export function WhatsappSalesChatPanel({
             e.preventDefault();
             submit(text);
           }}
-          className="shrink-0 border-t border-white/[0.06] p-3"
+          className="shrink-0 border-t border-line p-3"
         >
-          <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2 transition-colors focus-within:border-indigo-500/50 focus-within:ring-2 focus-within:ring-indigo-500/25">
+          <div className="flex items-center gap-2 rounded-2xl border border-line bg-well px-3 py-2 transition-colors focus-within:border-brand/50 focus-within:ring-2 focus-within:ring-brand/25">
             <input
               ref={inputRef}
               value={text}
@@ -214,13 +214,13 @@ export function WhatsappSalesChatPanel({
               placeholder="Ask Joe about leads, webinars, or handoffs…"
               aria-label="Chat message"
               disabled={pending}
-              className="min-w-0 flex-1 bg-transparent py-1 text-[13px] text-white placeholder:text-slate-500 focus:outline-none disabled:opacity-50"
+              className="min-w-0 flex-1 bg-transparent py-1 text-[13px] text-ink placeholder:text-subtle focus:outline-none disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={pending || !text.trim()}
               aria-label="Send message"
-              className="grid size-8 shrink-0 place-items-center rounded-full bg-indigo-500 text-white transition-colors hover:bg-indigo-400 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-slate-500"
+              className="grid size-8 shrink-0 place-items-center rounded-full bg-brand text-white transition-colors hover:bg-brand-strong disabled:cursor-not-allowed disabled:bg-well disabled:text-subtle"
             >
               <ArrowUp className="size-3.5" />
             </button>
@@ -235,7 +235,7 @@ export function WhatsappSalesChatPanel({
                 type="button"
                 onClick={() => submit(c.prompt)}
                 disabled={pending}
-                className="rounded-full border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 text-[11px] text-slate-400 transition-colors hover:border-indigo-500/30 hover:text-slate-200 disabled:opacity-40"
+                className="rounded-full border border-line bg-surface-muted px-2.5 py-1 text-[11px] text-muted transition-colors hover:border-brand/30 hover:text-ink-2 disabled:opacity-40"
               >
                 {c.label}
               </button>

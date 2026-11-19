@@ -35,7 +35,7 @@ export function FilterSelect({
   }, [open]);
 
   return (
-    <div ref={rootRef} className={cn("relative flex min-w-[140px] flex-col gap-1 text-[11px] text-slate-500", className)}>
+    <div ref={rootRef} className={cn("relative flex min-w-[140px] flex-col gap-1 text-[11px] text-subtle", className)}>
       <span>{label}</span>
       <button
         type="button"
@@ -43,18 +43,18 @@ export function FilterSelect({
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 text-left text-sm text-slate-200",
-          "hover:bg-white/[0.05] focus-visible:border-indigo-500/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
-          open && "border-indigo-500/60 ring-2 ring-indigo-500",
+          "flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-line bg-well px-3 text-left text-sm text-ink-2",
+          "hover:bg-white/[0.05] focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40",
+          open && "border-brand ring-2 ring-brand",
         )}
       >
         <span className="truncate">{display}</span>
-        <ChevronDown className={cn("size-4 shrink-0 text-slate-500 transition-transform", open && "rotate-180")} />
+        <ChevronDown className={cn("size-4 shrink-0 text-subtle transition-transform", open && "rotate-180")} />
       </button>
       {open && (
         <ul
           role="listbox"
-          className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 max-h-56 overflow-auto rounded-lg border border-white/10 bg-[#0b0e16] py-1 shadow-xl shadow-black/50"
+          className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 max-h-56 overflow-auto rounded-lg border border-line bg-surface py-1 shadow-xl shadow-black/50"
         >
           {options.map((o) => {
             const text = o === "all" ? `All ${label.toLowerCase()}` : o;
@@ -69,7 +69,7 @@ export function FilterSelect({
                   }}
                   className={cn(
                     "flex w-full px-3 py-2 text-left text-sm transition-colors",
-                    selected ? "bg-indigo-500 text-white" : "text-slate-200 hover:bg-white/[0.06]",
+                    selected ? "bg-brand text-white" : "text-ink-2 hover:bg-well",
                   )}
                 >
                   {text}

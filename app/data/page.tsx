@@ -5,12 +5,13 @@ import {
   AlertTriangle, CheckCircle2, Copy, Download, FileSpreadsheet, Upload, UserPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { OutcomesStrip } from "@/components/cockpit/outcomes-strip";
 import { WhatsappSalesCockpitShell } from "@/components/whatsapp-sales/cockpit-shell";
 import { MOCK_UPLOAD_HISTORY, simulateLeadImport } from "@/components/whatsapp-sales/mocks";
 import type { LeadUploadHistoryRow, SimulatedImportSummary } from "@/components/whatsapp-sales/types";
 import { useWhatsappSalesWorkerName } from "@/components/whatsapp-sales/use-worker-name";
 
-const CARD = "rounded-2xl border border-white/[0.07] bg-[#0c1018]";
+const CARD = "card-surface";
 
 export default function WhatsappSalesDataPage() {
   const { agentId, workerName } = useWhatsappSalesWorkerName();
@@ -64,21 +65,21 @@ export default function WhatsappSalesDataPage() {
 
   return (
     <WhatsappSalesCockpitShell agentId={agentId} workerName={workerName} active="data">
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-5">
+      <div className="flex w-full flex-col gap-5">
         <header className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-[28px] font-bold tracking-[-0.03em] text-white">Data</h1>
-              <p className="mt-1 max-w-[56ch] text-[14px] text-slate-400">
+              <h1 className="text-[28px] font-bold tracking-[-0.03em] text-ink">Data</h1>
+              <p className="mt-1 max-w-[56ch] text-[14px] text-muted">
                 Upload lead sheets, review validation, and track import history. Bad rows never leave a half-import.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <p className="text-[12.5px] text-slate-500">{workerName}</p>
+              <p className="text-[12.5px] text-subtle">{workerName}</p>
               <a
                 href="/examples/jm-leads-example.csv"
                 download="JM_Leads_Example.csv"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-[13px] font-semibold text-slate-200 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
+                className="inline-flex items-center gap-2 rounded-xl border border-line bg-well px-3.5 py-2 text-[13px] font-semibold text-ink-2 hover:bg-well focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
               >
                 <Download className="size-3.5" />
                 Example CSV
@@ -86,59 +87,55 @@ export default function WhatsappSalesDataPage() {
             </div>
           </div>
 
-          <div className={cn(CARD, "flex flex-wrap items-stretch divide-x divide-white/[0.06]")}>
-            <div className="flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3">
-              <span className="grid size-8 place-items-center rounded-lg bg-indigo-500/15 text-indigo-300">
-                <Upload className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-white">{totals.uploads}</p>
-                <p className="mt-1 text-[11px] text-slate-500">Uploads</p>
-              </div>
-            </div>
-            <div className="flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3">
-              <span className="grid size-8 place-items-center rounded-lg bg-emerald-500/15 text-emerald-300">
-                <UserPlus className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-emerald-300">
-                  {totals.newLeads.toLocaleString()}
-                </p>
-                <p className="mt-1 text-[11px] text-slate-500">New leads</p>
-              </div>
-            </div>
-            <div className="flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3">
-              <span className="grid size-8 place-items-center rounded-lg bg-white/[0.05] text-slate-400">
-                <Copy className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-white">
-                  {totals.duplicates.toLocaleString()}
-                </p>
-                <p className="mt-1 text-[11px] text-slate-500">Duplicates skipped</p>
-              </div>
-            </div>
-            <div className="flex min-w-[7.5rem] flex-1 items-center gap-2.5 px-4 py-3">
-              <span className="grid size-8 place-items-center rounded-lg bg-amber-500/15 text-amber-300">
-                <AlertTriangle className="size-3.5" />
-              </span>
-              <div>
-                <p className="text-[18px] font-bold leading-none tracking-[-0.02em] text-amber-300">
-                  {totals.invalid.toLocaleString()}
-                </p>
-                <p className="mt-1 text-[11px] text-slate-500">Invalid rows</p>
-              </div>
-            </div>
-          </div>
+          <OutcomesStrip
+            variant="compact"
+            title="Import health"
+            tiles={[
+              {
+                value: String(totals.uploads),
+                label: "Uploads",
+                tone: "brand",
+                icon: Upload,
+                caption: "History rows",
+                spark: [25, 35, 42, 50, 58],
+              },
+              {
+                value: totals.newLeads.toLocaleString(),
+                label: "New leads",
+                tone: "success",
+                trend: "up",
+                icon: UserPlus,
+                caption: "Added to pool",
+                spark: [30, 40, 48, 55, 65],
+              },
+              {
+                value: totals.duplicates.toLocaleString(),
+                label: "Duplicates skipped",
+                tone: "neutral",
+                icon: Copy,
+                caption: "Phone match",
+                spark: [55, 52, 50, 48, 45],
+              },
+              {
+                value: totals.invalid.toLocaleString(),
+                label: "Invalid rows",
+                tone: "warning",
+                trend: "down",
+                icon: AlertTriangle,
+                caption: "Needs fix",
+                spark: [40, 35, 32, 28, 22],
+              },
+            ]}
+          />
         </header>
 
         {/* Upload zone */}
         <section className={cn(CARD, "p-5 sm:p-6")}>
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-[15px] font-semibold text-white">Upload lead sheet</h2>
-              <p className="mt-1 text-[13px] text-slate-400">
-                Supported: <span className="text-slate-200">CSV</span>, <span className="text-slate-200">XLSX</span>.
+              <h2 className="text-[15px] font-semibold text-ink">Upload lead sheet</h2>
+              <p className="mt-1 text-[13px] text-muted">
+                Supported: <span className="text-ink-2">CSV</span>, <span className="text-ink-2">XLSX</span>.
                 Dedup by normalised phone. This preview simulates the import — the file is not uploaded.
               </p>
             </div>
@@ -165,20 +162,20 @@ export default function WhatsappSalesDataPage() {
             className={cn(
               "flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed px-6 py-10 text-center transition-colors",
               dragging
-                ? "border-indigo-400/50 bg-indigo-500/10"
-                : "border-white/10 bg-white/[0.02] hover:border-indigo-500/35 hover:bg-white/[0.04]",
+                ? "border-brand/50 bg-brand-soft"
+                : "border-line bg-surface-muted hover:border-indigo-500/35 hover:bg-well",
               busy && "pointer-events-none opacity-70",
             )}
           >
-            <span className="grid size-12 place-items-center rounded-2xl bg-indigo-500/15 text-indigo-300">
+            <span className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand-ink">
               <Upload className="size-5" />
             </span>
-            <p className="mt-4 text-[15px] font-semibold text-white">
+            <p className="mt-4 text-[15px] font-semibold text-ink">
               {busy ? "Processing…" : "Drop a file here, or click to browse"}
             </p>
-            <p className="mt-1 text-[12.5px] text-slate-500">CSV or XLSX · max preview simulation</p>
+            <p className="mt-1 text-[12.5px] text-subtle">CSV or XLSX · max preview simulation</p>
             {!busy && (
-              <span className="mt-4 inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-4 py-2 text-[13px] font-semibold text-white">
+              <span className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2 text-[13px] font-semibold text-white">
                 <Upload className="size-3.5" /> Upload Lead Sheet
               </span>
             )}
@@ -193,32 +190,32 @@ export default function WhatsappSalesDataPage() {
 
           {busy && (
             <div className="mt-4">
-              <div className="mb-1.5 flex justify-between text-[11px] text-slate-500">
+              <div className="mb-1.5 flex justify-between text-[11px] text-subtle">
                 <span>Upload progress</span>
                 <span>{progress}%</span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-white/[0.06]">
-                <div className="h-full rounded-full bg-indigo-500 transition-all" style={{ width: `${progress}%` }} />
+              <div className="h-2 overflow-hidden rounded-full bg-well">
+                <div className="h-full rounded-full bg-brand transition-all" style={{ width: `${progress}%` }} />
               </div>
             </div>
           )}
 
           {error && (
             <div role="alert" className="mt-4 flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3">
-              <AlertTriangle className="mt-0.5 size-4 shrink-0 text-red-300" />
-              <p className="text-sm text-red-300">{error}</p>
+              <AlertTriangle className="mt-0.5 size-4 shrink-0 text-danger" />
+              <p className="text-sm text-danger">{error}</p>
             </div>
           )}
 
           {summary && (
             <div className="mt-5 space-y-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.05] p-4">
               <div className="flex items-start gap-3">
-                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-emerald-500/15 text-emerald-300">
+                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-success-soft text-success">
                   <CheckCircle2 className="size-4" />
                 </span>
                 <div className="min-w-0">
                   <p className="text-[13px] font-semibold text-emerald-200">Import complete</p>
-                  <p className="mt-0.5 truncate text-[12px] text-slate-400">{summary.fileName}</p>
+                  <p className="mt-0.5 truncate text-[12px] text-muted">{summary.fileName}</p>
                 </div>
               </div>
               <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -239,12 +236,12 @@ export default function WhatsappSalesDataPage() {
                       </li>
                     ))}
                   </ul>
-                  <p className="mt-2 text-[11px] text-slate-500">
+                  <p className="mt-2 text-[11px] text-subtle">
                     Invalid rows were skipped. Valid rows were processed; nothing was left half-imported.
                   </p>
                 </div>
               )}
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-subtle">
                 Simulated result for UI review. A later backend branch will persist imports and enforce opt-out / eligibility rules.
               </p>
             </div>
@@ -253,26 +250,26 @@ export default function WhatsappSalesDataPage() {
 
         {/* History */}
         <section className={cn(CARD, "overflow-hidden")}>
-          <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] px-5 py-3.5">
+          <div className="flex items-center justify-between gap-2 border-b border-line px-5 py-3.5">
             <div>
-              <h3 className="text-[15px] font-semibold text-white">Upload history</h3>
-              <p className="mt-0.5 text-[12.5px] text-slate-500">Date · File · Rows · New · Duplicates · Invalid</p>
+              <h3 className="text-[15px] font-semibold text-ink">Upload history</h3>
+              <p className="mt-0.5 text-[12.5px] text-subtle">Date · File · Rows · New · Duplicates · Invalid</p>
             </div>
           </div>
 
           {history.length === 0 ? (
             <div className="flex flex-col items-center px-6 py-14 text-center">
-              <span className="grid size-12 place-items-center rounded-2xl bg-white/[0.04] text-slate-500">
+              <span className="grid size-12 place-items-center rounded-2xl bg-well text-subtle">
                 <FileSpreadsheet className="size-5" />
               </span>
-              <p className="mt-4 text-[15px] font-semibold text-white">No uploads yet</p>
-              <p className="mt-1 text-[13px] text-slate-500">Upload a lead sheet to see history here.</p>
+              <p className="mt-4 text-[15px] font-semibold text-ink">No uploads yet</p>
+              <p className="mt-1 text-[13px] text-subtle">Upload a lead sheet to see history here.</p>
             </div>
           ) : (
             <>
               <div className="hidden overflow-x-auto md:block">
                 <table className="min-w-full text-left text-[13px]">
-                  <thead className="border-b border-white/[0.06] bg-[#0e131c] text-[11px] uppercase tracking-wider text-slate-500">
+                  <thead className="border-b border-line bg-surface-muted text-[11px] uppercase tracking-wider text-subtle">
                     <tr>
                       <th className="px-5 py-3.5 font-semibold">Date</th>
                       <th className="px-5 py-3.5 font-semibold">File</th>
@@ -282,43 +279,43 @@ export default function WhatsappSalesDataPage() {
                       <th className="px-5 py-3.5 font-semibold">Invalid</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.05]">
+                  <tbody className="divide-y divide-line">
                     {history.map((row) => (
-                      <tr key={row.id} className="hover:bg-white/[0.02]">
-                        <td className="px-5 py-3.5 text-slate-300">{row.date}</td>
+                      <tr key={row.id} className="hover:bg-surface-muted">
+                        <td className="px-5 py-3.5 text-ink-3">{row.date}</td>
                         <td className="px-5 py-3.5">
                           <span className="flex items-center gap-2.5">
-                            <span className="grid size-8 place-items-center rounded-lg bg-white/[0.04] text-slate-400">
+                            <span className="grid size-8 place-items-center rounded-lg bg-well text-muted">
                               <FileSpreadsheet className="size-3.5" />
                             </span>
-                            <span className="font-medium text-white">{row.fileName}</span>
+                            <span className="font-medium text-ink">{row.fileName}</span>
                           </span>
                         </td>
-                        <td className="px-5 py-3.5 text-slate-300">{row.rows.toLocaleString()}</td>
-                        <td className="px-5 py-3.5 font-medium text-emerald-300">{row.newLeads.toLocaleString()}</td>
-                        <td className="px-5 py-3.5 text-slate-400">{row.duplicates.toLocaleString()}</td>
-                        <td className="px-5 py-3.5 font-medium text-amber-300">{row.invalid.toLocaleString()}</td>
+                        <td className="px-5 py-3.5 text-ink-3">{row.rows.toLocaleString()}</td>
+                        <td className="px-5 py-3.5 font-medium text-success">{row.newLeads.toLocaleString()}</td>
+                        <td className="px-5 py-3.5 text-muted">{row.duplicates.toLocaleString()}</td>
+                        <td className="px-5 py-3.5 font-medium text-warning">{row.invalid.toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
 
-              <ul className="divide-y divide-white/[0.05] md:hidden">
+              <ul className="divide-y divide-line md:hidden">
                 {history.map((row) => (
                   <li key={row.id} className="px-4 py-4">
                     <div className="flex items-start gap-3">
-                      <span className="grid size-9 place-items-center rounded-lg bg-white/[0.04] text-slate-400">
+                      <span className="grid size-9 place-items-center rounded-lg bg-well text-muted">
                         <FileSpreadsheet className="size-3.5" />
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-[13px] font-semibold text-white">{row.fileName}</p>
-                        <p className="mt-0.5 text-[12px] text-slate-500">{row.date}</p>
+                        <p className="truncate text-[13px] font-semibold text-ink">{row.fileName}</p>
+                        <p className="mt-0.5 text-[12px] text-subtle">{row.date}</p>
                         <div className="mt-2 flex flex-wrap gap-3 text-[12px]">
-                          <span className="text-slate-400">{row.rows.toLocaleString()} rows</span>
-                          <span className="text-emerald-300">{row.newLeads.toLocaleString()} new</span>
-                          <span className="text-slate-500">{row.duplicates.toLocaleString()} dupes</span>
-                          <span className="text-amber-300">{row.invalid.toLocaleString()} invalid</span>
+                          <span className="text-muted">{row.rows.toLocaleString()} rows</span>
+                          <span className="text-success">{row.newLeads.toLocaleString()} new</span>
+                          <span className="text-subtle">{row.duplicates.toLocaleString()} dupes</span>
+                          <span className="text-warning">{row.invalid.toLocaleString()} invalid</span>
                         </div>
                       </div>
                     </div>
@@ -341,11 +338,11 @@ function SummaryStat({
   tone?: "emerald" | "amber";
 }) {
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
-      <dt className="text-[10px] uppercase tracking-wider text-slate-500">{label}</dt>
+    <div className="rounded-lg border border-line bg-surface-muted px-3 py-2.5">
+      <dt className="text-[10px] uppercase tracking-wider text-subtle">{label}</dt>
       <dd className={cn(
         "mt-1 text-lg font-semibold",
-        tone === "emerald" ? "text-emerald-300" : tone === "amber" ? "text-amber-300" : "text-white",
+        tone === "emerald" ? "text-success" : tone === "amber" ? "text-warning" : "text-white",
       )}>
         {value.toLocaleString()}
       </dd>

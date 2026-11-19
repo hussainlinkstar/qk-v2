@@ -30,8 +30,8 @@ export function ChartCard({
   className?: string;
 }) {
   return (
-    <div className={cn("rounded-xl border border-white/[0.06] p-5", className)} style={CARD_BG}>
-      <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-white/88">
+    <div className={cn("rounded-xl border border-line p-5", className)} style={CARD_BG}>
+      <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-ink/88">
         <span className={cn("shrink-0", iconColor)}>{icon}</span>
         {title}
       </h3>
@@ -55,15 +55,15 @@ export function KpiGrid({
             key={item.key}
             type="button"
             onClick={() => onOpen?.(item.key)}
-            className="rounded-xl border border-white/[0.06] p-3.5 text-left transition-all hover:border-indigo-400/35 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/45"
+            className="rounded-xl border border-line p-3.5 text-left transition-all hover:border-indigo-400/35 hover:bg-well focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/45"
             style={CARD_BG}
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[10px] font-medium uppercase tracking-wider text-white/55">{item.label}</span>
+              <span className="text-[10px] font-medium uppercase tracking-wider text-ink/55">{item.label}</span>
               <Icon className="size-3.5 shrink-0" style={{ color: item.color }} />
             </div>
-            <p className="mt-2 text-lg font-bold text-white/90 sm:text-xl">{item.value}</p>
-            {item.hint && <p className="mt-1 text-[11px] text-white/45">{item.hint}</p>}
+            <p className="mt-2 text-lg font-bold text-ink/90 sm:text-xl">{item.value}</p>
+            {item.hint && <p className="mt-1 text-[11px] text-ink/45">{item.hint}</p>}
           </button>
         );
       })}
@@ -99,7 +99,7 @@ export function IntentDonut({ data }: { data: ChartSlice[] }) {
         {data.map((d) => (
           <span key={d.key} className="flex items-center gap-1.5">
             <span className="size-2.5 rounded-full" style={{ background: d.color }} />
-            <span className="text-[11px] text-white/68">{d.name} ({d.value})</span>
+            <span className="text-[11px] text-ink/68">{d.name} ({d.value})</span>
           </span>
         ))}
       </div>
@@ -109,7 +109,7 @@ export function IntentDonut({ data }: { data: ChartSlice[] }) {
 
 export function StatusPipelineChart({ data }: { data: StatusBar[] }) {
   return (
-    <ChartCard title="Lead pipeline by status" icon={<BarChart3 className="size-4" />} iconColor="text-indigo-400">
+    <ChartCard title="Lead pipeline by status" icon={<BarChart3 className="size-4" />} iconColor="text-brand">
       <ResponsiveContainer width="100%" height={260}>
         <BarChart data={data} margin={{ top: 5, right: 8, left: 0, bottom: 48 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
@@ -177,10 +177,10 @@ export function MarketBars({ data }: { data: StatusBar[] }) {
         {data.map((row) => (
           <div key={row.name}>
             <div className="mb-1 flex items-center justify-between text-[12px]">
-              <span className="text-white/75">{row.name}</span>
-              <span className="font-semibold text-white/90">{row.count}</span>
+              <span className="text-ink/75">{row.name}</span>
+              <span className="font-semibold text-ink/90">{row.count}</span>
             </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+            <div className="h-1.5 overflow-hidden rounded-full bg-well">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400"
                 style={{ width: `${Math.round((row.count / max) * 100)}%` }}
@@ -197,34 +197,34 @@ export function InsightRail({ insights }: { insights: InsightCard[] }) {
   const toneBorder: Record<InsightCard["tone"], string> = {
     emerald: "border-emerald-500/20",
     amber: "border-amber-500/20",
-    indigo: "border-indigo-500/20",
+    indigo: "border-brand/20",
     red: "border-red-500/20",
   };
   const toneAccent: Record<InsightCard["tone"], string> = {
     emerald: "bg-emerald-400",
     amber: "bg-amber-400",
-    indigo: "bg-indigo-400",
+    indigo: "bg-brand-blue",
     red: "bg-red-400",
   };
 
   return (
-    <div className="flex h-full flex-col rounded-xl border border-white/[0.06]" style={CARD_BG}>
-      <div className="flex h-12 shrink-0 items-center gap-2 border-b border-white/[0.06] px-4">
-        <Sparkles className="size-3.5 text-indigo-300" />
-        <p className="text-xs font-semibold uppercase tracking-wider text-indigo-200/90">Trends</p>
+    <div className="flex h-full flex-col rounded-xl border border-line" style={CARD_BG}>
+      <div className="flex h-12 shrink-0 items-center gap-2 border-b border-line px-4">
+        <Sparkles className="size-3.5 text-brand-ink" />
+        <p className="text-xs font-semibold uppercase tracking-wider text-brand-ink/90">Trends</p>
       </div>
       <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto p-3">
         {insights.map((insight) => (
           <div
             key={insight.title}
-            className={cn("relative rounded-lg border bg-white/[0.03] px-3 py-2.5 pl-4", toneBorder[insight.tone])}
+            className={cn("relative rounded-lg border bg-well px-3 py-2.5 pl-4", toneBorder[insight.tone])}
           >
             <span className={cn("absolute left-0 top-0 h-full w-1 rounded-l-lg", toneAccent[insight.tone])} />
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-white/70">{insight.title}</p>
-            <p className="mt-1 text-[13px] leading-relaxed text-white/82">{insight.text}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-ink/70">{insight.title}</p>
+            <p className="mt-1 text-[13px] leading-relaxed text-ink/82">{insight.text}</p>
           </div>
         ))}
-        <div className="flex items-start gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2.5 text-[12px] text-white/45">
+        <div className="flex items-start gap-2 rounded-lg border border-line bg-surface-muted px-3 py-2.5 text-[12px] text-ink/45">
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-amber-400/80" />
           Preview charts use mock lead activity. Live Interakt metrics arrive with the backend branch.
         </div>
@@ -235,12 +235,12 @@ export function InsightRail({ insights }: { insights: InsightCard[] }) {
 
 export function ConnectionChip({ connected }: { connected: boolean }) {
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-white/[0.06] px-4 py-3 text-[13px]" style={CARD_BG}>
-      <MessageSquare className="size-3.5 text-slate-500" />
+    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-line px-4 py-3 text-[13px]" style={CARD_BG}>
+      <MessageSquare className="size-3.5 text-subtle" />
       <span className={`size-2 rounded-full ${connected ? "bg-emerald-400" : "bg-amber-400"}`} />
-      <span className="text-slate-300">Interakt {connected ? "connected" : "not connected"}</span>
+      <span className="text-ink-3">Interakt {connected ? "connected" : "not connected"}</span>
       <span className="text-slate-600">·</span>
-      <span className="text-slate-500">Mock status for UI preview</span>
+      <span className="text-subtle">Mock status for UI preview</span>
     </div>
   );
 }

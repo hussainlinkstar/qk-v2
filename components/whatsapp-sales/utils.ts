@@ -17,25 +17,41 @@ export function formatDisplayDate(iso: string | null | undefined): string {
 export function interestBadgeClass(interest: string): string {
   switch (interest) {
     case "High":
-      return "bg-emerald-500/15 text-emerald-300 border-emerald-500/25";
+      return "border-transparent bg-success-soft text-success";
     case "Medium":
-      return "bg-amber-500/15 text-amber-300 border-amber-500/25";
+      return "border-transparent bg-warning-soft text-warning";
     case "Low":
-      return "bg-slate-500/15 text-slate-300 border-slate-500/25";
+      return "border-line bg-well text-muted";
     default:
-      return "bg-white/5 text-slate-400 border-white/10";
+      return "border-line bg-well text-muted";
   }
 }
 
 export function statusBadgeClass(status: string): string {
   if (status === "Human Handoff" || status === "Opted Out") {
-    return "bg-red-500/15 text-red-300 border-red-500/25";
+    return "border-transparent bg-danger-soft text-danger";
   }
   if (status === "High Intent" || status === "Qualified") {
-    return "bg-emerald-500/15 text-emerald-300 border-emerald-500/25";
+    return "border-transparent bg-success-soft text-success";
   }
   if (status === "Active Conversation") {
-    return "bg-indigo-500/15 text-indigo-300 border-indigo-500/25";
+    return "border-transparent bg-brand-soft text-brand-ink";
   }
-  return "bg-white/5 text-slate-300 border-white/10";
+  return "border-line bg-well text-muted";
+}
+
+/** Explainable webinar match reason from structured lead attributes (PRD §17–18). */
+export function webinarMatchReason(
+  lead: { marketInterest: string; locationInterest: string },
+  webinar: { investmentMarket: string; relevantLocations: string[] },
+): string {
+  const reasons: string[] = [];
+  if (lead.marketInterest && lead.marketInterest.toUpperCase() === webinar.investmentMarket.toUpperCase()) {
+    reasons.push(`Market ${lead.marketInterest}`);
+  }
+  const loc = webinar.relevantLocations.find((l) =>
+    lead.locationInterest.toLowerCase().includes(l.toLowerCase()),
+  );
+  if (loc) reasons.push(`Location ${lead.locationInterest}`);
+  return reasons.join(" · ") || "Structured profile match";
 }

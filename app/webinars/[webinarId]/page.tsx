@@ -14,7 +14,7 @@ import { MOCK_LEADS } from "@/components/whatsapp-sales/mocks";
 import { useWhatsappSalesWorkerName } from "@/components/whatsapp-sales/use-worker-name";
 import { getWebinar, listWebinars, subscribeWebinars, upsertWebinar } from "@/components/whatsapp-sales/webinar-store";
 import type { OutreachMode } from "@/components/whatsapp-sales/types";
-import { interestBadgeClass, statusBadgeClass } from "@/components/whatsapp-sales/utils";
+import { interestBadgeClass, statusBadgeClass, webinarMatchReason } from "@/components/whatsapp-sales/utils";
 
 export default function WhatsappSalesWebinarDetailPage() {
   const { webinarId } = useParams<{ webinarId: string }>();
@@ -39,10 +39,10 @@ export default function WhatsappSalesWebinarDetailPage() {
     return (
       <WhatsappSalesCockpitShell agentId={agentId} workerName={workerName} active="webinars">
         <div className="space-y-4">
-          <button type="button" onClick={() => router.push(`/webinars`)} className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white">
+          <button type="button" onClick={() => router.push(`/webinars`)} className="flex items-center gap-1.5 text-sm text-muted hover:text-ink">
             <ArrowLeft className="size-4" /> Back to webinars
           </button>
-          <div className="rounded-2xl border border-dashed border-white/10 px-6 py-16 text-center text-sm text-slate-500">
+          <div className="rounded-2xl border border-dashed border-line px-6 py-16 text-center text-sm text-subtle">
             Webinar not found.
           </div>
         </div>
@@ -60,39 +60,39 @@ export default function WhatsappSalesWebinarDetailPage() {
   return (
     <WhatsappSalesCockpitShell agentId={agentId} workerName={workerName} active="webinars">
       <div className="space-y-6">
-        <button type="button" onClick={() => router.push(`/webinars`)} className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white">
+        <button type="button" onClick={() => router.push(`/webinars`)} className="flex items-center gap-1.5 text-sm text-muted hover:text-ink">
           <ArrowLeft className="size-4" /> Back to webinars
         </button>
 
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] p-6">
+        <div className="card-surface p-6">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-xl font-semibold text-white">{webinar.title}</h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <h2 className="text-xl font-semibold text-ink">{webinar.title}</h2>
+              <p className="mt-1 text-sm text-muted">
                 {webinar.investmentMarket} · {webinar.eventDate} · {webinar.eventTime}
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-[11px] text-slate-300">
+              <span className="rounded-md border border-line bg-well px-2 py-1 text-[11px] text-ink-3">
                 {webinar.outreachMode}
               </span>
               <button
                 type="button"
                 onClick={() => setEditing((v) => !v)}
-                className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-slate-300 hover:bg-white/[0.04]"
+                className="rounded-lg border border-line px-3 py-1.5 text-xs text-ink-3 hover:bg-well"
               >
                 {editing ? "Close editor" : "Edit"}
               </button>
             </div>
           </div>
-          <p className="mt-3 text-[13px] leading-6 text-slate-300">{webinar.description}</p>
+          <p className="mt-3 text-[13px] leading-6 text-ink-3">{webinar.description}</p>
           <dl className="mt-4 grid grid-cols-1 gap-2 text-[13px] sm:grid-cols-2">
-            <div><dt className="text-slate-500">Locations</dt><dd className="text-slate-200">{webinar.relevantLocations.join(", ") || "—"}</dd></div>
-            <div><dt className="text-slate-500">Link</dt><dd className="truncate text-slate-200">{webinar.webinarLink || "—"}</dd></div>
-            <div><dt className="text-slate-500">Template</dt><dd className="text-slate-200">{webinar.approvedTemplate}</dd></div>
+            <div><dt className="text-subtle">Locations</dt><dd className="text-ink-2">{webinar.relevantLocations.join(", ") || "—"}</dd></div>
+            <div><dt className="text-subtle">Link</dt><dd className="truncate text-ink-2">{webinar.webinarLink || "—"}</dd></div>
+            <div><dt className="text-subtle">Template</dt><dd className="text-ink-2">{webinar.approvedTemplate}</dd></div>
             <div>
-              <dt className="text-slate-500">Auto trigger</dt>
-              <dd className="text-slate-200">
+              <dt className="text-subtle">Auto trigger</dt>
+              <dd className="text-ink-2">
                 {webinar.outreachMode === "Automatic"
                   ? (webinar.autoTriggerEnabled ? webinar.autoTriggerTiming || "Enabled" : "Disabled")
                   : "—"}
@@ -106,19 +106,19 @@ export default function WhatsappSalesWebinarDetailPage() {
         )}
 
         <OutcomesStrip
-          title="SUMMARY"
+          title="Webinar relevance"
           tiles={[
-            { value: String(MOCK_LEADS.length), label: "Total pool", trend: "neutral" },
-            { value: String(relevantLeads.length), label: "Relevant", trend: "neutral" },
-            { value: String(eligible.length), label: "WhatsApp Eligible", trend: "up" },
-            { value: String(noConsent.length), label: "Excluded – No Consent", trend: "down" },
-            { value: String(optedOut.length), label: "Excluded – Opted Out", trend: "down" },
+            { value: String(MOCK_LEADS.length), label: "Total pool", tone: "neutral", caption: "Lead pool" },
+            { value: String(relevantLeads.length), label: "Relevant", tone: "brand", caption: "Matched attributes" },
+            { value: String(eligible.length), label: "WhatsApp eligible", tone: "success", trend: "up", caption: "Ready for outreach" },
+            { value: String(noConsent.length), label: "No consent", tone: "warning", trend: "down", caption: "Excluded" },
+            { value: String(optedOut.length), label: "Opted out", tone: "danger", trend: "down", caption: "Excluded" },
           ]}
         />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <section className="rounded-2xl border border-white/[0.06] bg-white/[0.015] p-5">
-            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-indigo-400">Outreach status</h3>
+          <section className="card-surface p-5">
+            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-brand">Outreach status</h3>
             <dl className="mt-3 space-y-2 text-[13px]">
               <Row label="Mode" value={webinar.outreachMode} />
               <Row
@@ -139,21 +139,21 @@ export default function WhatsappSalesWebinarDetailPage() {
                   <button
                     type="button"
                     onClick={() => setManualStep("review")}
-                    className="inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-3 py-2 text-xs font-semibold text-white hover:bg-indigo-400"
+                    className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-xs font-semibold text-white hover:bg-brand-strong"
                   >
                     <Send className="size-3.5" /> Send / Initiate
                   </button>
                 )}
                 {manualStep === "review" && (
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-500/[0.06] p-3">
-                    <p className="text-[13px] text-slate-200">
+                  <div className="rounded-xl border border-brand/25 bg-brand-soft p-3">
+                    <p className="text-[13px] text-ink-2">
                       Review {eligible.length} WhatsApp-eligible relevant leads, then confirm.
                     </p>
                     <div className="mt-3 flex gap-2">
                       <button
                         type="button"
                         onClick={() => setManualStep("idle")}
-                        className="rounded-lg px-3 py-1.5 text-xs text-slate-400 hover:text-white"
+                        className="rounded-lg px-3 py-1.5 text-xs text-muted hover:text-ink"
                       >
                         Cancel
                       </button>
@@ -163,7 +163,7 @@ export default function WhatsappSalesWebinarDetailPage() {
                           setManualStep("done");
                           setConfirmNote(`Preview outreach queued for ${eligible.length} leads.`);
                         }}
-                        className="rounded-lg bg-indigo-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-400"
+                        className="rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-strong"
                       >
                         Confirm send
                       </button>
@@ -171,14 +171,14 @@ export default function WhatsappSalesWebinarDetailPage() {
                   </div>
                 )}
                 {manualStep === "done" && (
-                  <p className="text-[12px] text-emerald-300">{confirmNote}</p>
+                  <p className="text-[12px] text-success">{confirmNote}</p>
                 )}
               </div>
             )}
           </section>
 
-          <section className="rounded-2xl border border-white/[0.06] bg-white/[0.015] p-5">
-            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-indigo-400">Engagement</h3>
+          <section className="card-surface p-5">
+            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-brand">Engagement</h3>
             <dl className="mt-3 grid grid-cols-2 gap-3 text-[13px]">
               <Row label="Relevant" value={String(relevantLeads.length)} />
               <Row label="Contacted" value={String(webinar.contactedCount)} />
@@ -194,37 +194,30 @@ export default function WhatsappSalesWebinarDetailPage() {
           </section>
         </div>
 
-        <section className="rounded-2xl border border-white/[0.06] overflow-hidden">
-          <div className="border-b border-white/[0.06] px-4 py-3">
-            <h3 className="text-[13px] font-semibold text-white">Relevant leads</h3>
-            <p className="text-[12px] text-slate-500">
-              Match reason, WhatsApp eligibility, and exclusion reason.
+        <section className="card-surface overflow-hidden">
+          <div className="border-b border-line px-4 py-3">
+            <h3 className="text-[13px] font-semibold text-ink">Relevant leads</h3>
+            <p className="text-[12px] text-subtle">
+              Structured match reason, WhatsApp eligibility, and exclusion reason — not a campaign audience builder.
             </p>
           </div>
           {relevantLeads.length === 0 ? (
-            <p className="px-4 py-10 text-center text-sm text-slate-500">No matching leads in mock data.</p>
+            <p className="px-4 py-10 text-center text-sm text-subtle">No matching leads in mock data.</p>
           ) : (
-            <ul className="divide-y divide-white/[0.05]">
+            <ul className="divide-y divide-line">
               {relevantLeads.map((l) => {
-                const why = [
-                  l.marketInterest === webinar.investmentMarket ? `Market ${l.marketInterest}` : null,
-                  webinar.relevantLocations.find((loc) =>
-                    l.locationInterest.toLowerCase().includes(loc.toLowerCase()),
-                  )
-                    ? `Location ${l.locationInterest}`
-                    : null,
-                ].filter(Boolean).join(" · ") || "Profile match";
+                const why = webinarMatchReason(l, webinar);
                 const excluded = l.optedOut ? "Opted out" : !l.whatsappEligible ? "No consent" : null;
                 return (
                   <li key={l.id}>
                     <button
                       type="button"
                       onClick={() => router.push(`/leads/${l.id}`)}
-                      className="flex w-full flex-col gap-2 px-4 py-3 text-left hover:bg-white/[0.02] sm:flex-row sm:items-center"
+                      className="flex w-full flex-col gap-2 px-4 py-3 text-left hover:bg-surface-muted sm:flex-row sm:items-center"
                     >
                       <span className="min-w-0 flex-1">
-                        <span className="block text-[13px] font-medium text-white">{l.firstName} {l.lastName}</span>
-                        <span className="block text-[12px] text-slate-500">
+                        <span className="block text-[13px] font-medium text-ink">{l.firstName} {l.lastName}</span>
+                        <span className="block text-[12px] text-subtle">
                           {why} · {l.budget || "Budget TBC"} · {l.investmentExperience || "Experience unknown"}
                         </span>
                       </span>
@@ -232,9 +225,9 @@ export default function WhatsappSalesWebinarDetailPage() {
                         <span className={cn("rounded-full border px-2 py-0.5 text-[11px]", interestBadgeClass(l.interest))}>{l.interest}</span>
                         <span className={cn("rounded-full border px-2 py-0.5 text-[11px]", statusBadgeClass(l.status))}>{l.status}</span>
                         {excluded ? (
-                          <span className="rounded-full border border-red-500/25 bg-red-500/10 px-2 py-0.5 text-[11px] text-red-300">{excluded}</span>
+                          <span className="rounded-full border border-transparent bg-danger-soft px-2 py-0.5 text-[11px] text-danger">{excluded}</span>
                         ) : (
-                          <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-[11px] text-emerald-300">Eligible</span>
+                          <span className="rounded-full border border-transparent bg-success-soft px-2 py-0.5 text-[11px] text-success">Eligible</span>
                         )}
                       </span>
                     </button>
@@ -252,8 +245,8 @@ export default function WhatsappSalesWebinarDetailPage() {
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-start justify-between gap-3">
-      <dt className="text-slate-500">{label}</dt>
-      <dd className="text-right font-medium text-slate-200">{value}</dd>
+      <dt className="text-subtle">{label}</dt>
+      <dd className="text-right font-medium text-ink-2">{value}</dd>
     </div>
   );
 }
@@ -278,8 +271,8 @@ function EditWebinarForm({
   const [autoTriggerTiming, setAutoTriggerTiming] = useState(webinar.autoTriggerTiming || "2 days before event");
 
   return (
-    <div className="space-y-3 rounded-2xl border border-indigo-500/20 bg-indigo-500/[0.04] p-5">
-      <p className="text-[12px] font-semibold uppercase tracking-wider text-indigo-300">Edit webinar</p>
+    <div className="space-y-3 rounded-2xl border border-brand/20 bg-brand-soft p-5">
+      <p className="text-[12px] font-semibold uppercase tracking-wider text-brand-ink">Edit webinar</p>
       <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" />
       <Textarea className="min-h-20" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -299,8 +292,8 @@ function EditWebinarForm({
             className={cn(
               "rounded-lg border px-3 py-1.5 text-xs font-medium",
               outreachMode === mode
-                ? "border-indigo-500/50 bg-indigo-500/20 text-white"
-                : "border-white/10 text-slate-400",
+                ? "border-brand/50 bg-brand-soft text-white"
+                : "border-line text-muted",
             )}
           >
             {mode}
@@ -309,7 +302,7 @@ function EditWebinarForm({
       </div>
       {outreachMode === "Automatic" && (
         <div className="space-y-2">
-          <label className="flex items-center gap-2 text-[12px] text-slate-300">
+          <label className="flex items-center gap-2 text-[12px] text-ink-3">
             <input
               type="checkbox"
               checked={autoTriggerEnabled}
@@ -323,7 +316,7 @@ function EditWebinarForm({
       )}
       <button
         type="button"
-        className="rounded-lg bg-indigo-500 px-3 py-2 text-xs font-semibold text-white hover:bg-indigo-400"
+        className="rounded-lg bg-brand px-3 py-2 text-xs font-semibold text-white hover:bg-brand-strong"
         onClick={() => {
           const relevantLocations = locations.split(",").map((s) => s.trim()).filter(Boolean);
           const market = investmentMarket.trim().toUpperCase();
